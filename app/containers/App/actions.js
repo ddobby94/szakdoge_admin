@@ -16,54 +16,13 @@
  */
 
 import {
-  LOAD_REPOS,
-  LOAD_REPOS_SUCCESS,
-  LOAD_REPOS_ERROR,
   GET_ALL_WORKERS_DATA,
   GET_ALL_WORKERS_DATA_SUCCESS,
   GET_ALL_WORKERS_DATA_FAILURE,
+  GET_ALL_CARS,
+  GET_ALL_CARS_SUCCESS,
+  GET_ALL_CARS_FAILURE,
 } from './constants';
-
-/**
- * Load the repositories, this action starts the request saga
- *
- * @return {object} An action object with a type of LOAD_REPOS
- */
-export function loadRepos() {
-  return {
-    type: LOAD_REPOS,
-  };
-}
-
-/**
- * Dispatched when the repositories are loaded by the request saga
- *
- * @param  {array} repos The repository data
- * @param  {string} username The current username
- *
- * @return {object}      An action object with a type of LOAD_REPOS_SUCCESS passing the repos
- */
-export function reposLoaded(repos, username) {
-  return {
-    type: LOAD_REPOS_SUCCESS,
-    repos,
-    username,
-  };
-}
-
-/**
- * Dispatched when loading the repositories fails
- *
- * @param  {object} error The error
- *
- * @return {object}       An action object with a type of LOAD_REPOS_ERROR passing the error
- */
-export function repoLoadingError(error) {
-  return {
-    type: LOAD_REPOS_ERROR,
-    error,
-  };
-}
 
 export function loadWorkersData() {
   return {
@@ -81,6 +40,26 @@ export function loadWorkersDataSuccess(workers) {
 export function loadWorkersDataFailure(error) {
   return {
     type: GET_ALL_WORKERS_DATA_FAILURE,
+    error,
+  };
+}
+
+export function loadCars() {
+  return {
+    type: GET_ALL_CARS,
+  };
+}
+
+export function loadCarsSuccess(cars) {
+  return {
+    type: GET_ALL_CARS_SUCCESS,
+    cars,
+  };
+}
+
+export function loadCarsFailure(error) {
+  return {
+    type: GET_ALL_CARS_FAILURE,
     error,
   };
 }
