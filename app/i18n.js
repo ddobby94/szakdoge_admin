@@ -7,11 +7,13 @@
 import { addLocaleData } from 'react-intl';
 import enLocaleData from 'react-intl/locale-data/en';
 import deLocaleData from 'react-intl/locale-data/de';
+import huLocaleData from 'react-intl/locale-data/hu';
 
 import { DEFAULT_LOCALE } from '../app/containers/App/constants';
 
 import enTranslationMessages from './translations/en.json';
 import deTranslationMessages from './translations/de.json';
+import huTranslationMessages from './translations/hu.json';
 
 addLocaleData(enLocaleData);
 addLocaleData(deLocaleData);
@@ -19,6 +21,7 @@ addLocaleData(deLocaleData);
 export const appLocales = [
   'en',
   'de',
+  'hu',
 ];
 
 export const formatTranslationMessages = (locale, messages) => {
@@ -36,4 +39,5 @@ export const formatTranslationMessages = (locale, messages) => {
 export const translationMessages = {
   en: formatTranslationMessages('en', enTranslationMessages),
   de: formatTranslationMessages('de', deTranslationMessages),
+  hu: formatTranslationMessages('hu',huTranslationMessages),
 };

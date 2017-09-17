@@ -19,6 +19,9 @@ import {
   LOAD_REPOS,
   LOAD_REPOS_SUCCESS,
   LOAD_REPOS_ERROR,
+  GET_ALL_WORKERS_DATA,
+  GET_ALL_WORKERS_DATA_SUCCESS,
+  GET_ALL_WORKERS_DATA_FAILURE,
 } from './constants';
 
 /**
@@ -58,6 +61,26 @@ export function reposLoaded(repos, username) {
 export function repoLoadingError(error) {
   return {
     type: LOAD_REPOS_ERROR,
+    error,
+  };
+}
+
+export function loadWorkersData() {
+  return {
+    type: GET_ALL_WORKERS_DATA,
+  };
+}
+
+export function loadWorkersDataSuccess(workers) {
+  return {
+    type: GET_ALL_WORKERS_DATA_SUCCESS,
+    workers,
+  };
+}
+
+export function loadWorkersDataFailure(error) {
+  return {
+    type: GET_ALL_WORKERS_DATA_FAILURE,
     error,
   };
 }

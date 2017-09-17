@@ -12,4 +12,7 @@
 export const LOAD_REPOS = 'boilerplate/App/LOAD_REPOS';
 export const LOAD_REPOS_SUCCESS = 'boilerplate/App/LOAD_REPOS_SUCCESS';
 export const LOAD_REPOS_ERROR = 'boilerplate/App/LOAD_REPOS_ERROR';
-export const DEFAULT_LOCALE = 'en';
+export const DEFAULT_LOCALE = 'hu';
+export const GET_ALL_WORKERS_DATA = 'GET_ALL_WORKERS_DATA';
+export const GET_ALL_WORKERS_DATA_SUCCESS = 'GET_ALL_WORKERS_DATA_SUCCESS';
+export const GET_ALL_WORKERS_DATA_FAILURE = 'GET_ALL_WORKERS_DATA_FAILURE';

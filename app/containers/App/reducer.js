@@ -16,6 +16,9 @@ import {
   LOAD_REPOS_SUCCESS,
   LOAD_REPOS,
   LOAD_REPOS_ERROR,
+  GET_ALL_WORKERS_DATA,
+  GET_ALL_WORKERS_DATA_SUCCESS,
+  GET_ALL_WORKERS_DATA_FAILURE,
 } from './constants';
 
 // The initial state of the App
@@ -26,6 +29,7 @@ const initialState = fromJS({
   userData: {
     repositories: false,
   },
+  workers: null,
 });
 
 function appReducer(state = initialState, action) {
@@ -43,6 +47,20 @@ function appReducer(state = initialState, action) {
     case LOAD_REPOS_ERROR:
       return state
         .set('error', action.error)
+        .set('loading', false);
+    case GET_ALL_WORKERS_DATA:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .setIn('workers', null);
+    case GET_ALL_WORKERS_DATA_SUCCESS:
+      return state
+        .set('error', false)
+        .set('loading', false)
+        .setIn('workers', action.workers);
+    case GET_ALL_WORKERS_DATA_FAILURE:
+      return state
+        .setIn('error', action.error)
         .set('loading', false);
     default:
       return state;
