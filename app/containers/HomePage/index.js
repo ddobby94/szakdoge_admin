@@ -10,12 +10,10 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { makeSelectRepos, makeSelectLoading, makeSelectError, allWorkers } from 'containers/App/selectors';
+import { makeSelectLoading, makeSelectError, allWorkers } from 'containers/App/selectors';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 
-import ReposList from 'components/ReposList';
-import AtPrefix from './AtPrefix';
 import CenteredSection from './CenteredSection';
 import Form from './Form';
 import Input from './Input';
@@ -41,9 +39,6 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   componentDidMount() {
     this.props.loadWorkers();
     console.log(this.props.workers);
-    if (this.props.username && this.props.username.trim().length > 0) {
-      this.props.onSubmitForm();
-    }
   }
 /*
     border-bottom-width: 10px !important;
@@ -164,18 +159,10 @@ HomePage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  repos: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.bool,
-  ]),
-  onSubmitForm: React.PropTypes.func,
   username: React.PropTypes.string,
-  onChangeUsername: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => createStructuredSelector({
-  repos: makeSelectRepos(),
-  username: makeSelectUsername(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
   workers: allWorkers(),
@@ -183,11 +170,6 @@ const mapStateToProps = (state) => createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onChangeUsername: (evt) => dispatch(changeUsername(evt.target.value)),
-    onSubmitForm: (evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(loadRepos());
-    },
     loadWorkers: () => dispatch(loadWorkersData()),
   };
 }

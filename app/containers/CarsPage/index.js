@@ -6,24 +6,19 @@
 
 import React from 'react';
 import Helmet from 'react-helmet';
+import { Link } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { makeSelectRepos, makeSelectLoading, makeSelectError, allWorkers } from 'containers/App/selectors';
+import { makeSelectLoading, makeSelectError, allCars } from 'containers/App/selectors';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 
-import ReposList from 'components/ReposList';
 import AtPrefix from './AtPrefix';
 import CenteredSection from './CenteredSection';
-import Form from './Form';
-import Input from './Input';
-import Section from './Section';
 import messages from './messages';
-import { loadRepos, loadWorkersData } from '../App/actions';
-import { changeUsername } from './actions';
-import { makeSelectUsername } from './selectors';
+import { loadCars } from '../App/actions';
 
 const divLineStyle = {
   "borderBottomWidth": "10px",
@@ -33,41 +28,47 @@ const divLineStyle = {
   "justifyContent": "space-around",
 }
 
-export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-  /**
-   * when initial state username is not null, submit the form to load repos
-   */
+const newCarButtonContainerStyle = {
+  "display": "flex",
+  "flexDirecton": "row",
+  "justifyContent": "flex-end",
+}
+
+const addNewCarButton = {
+  width: 200,
+  height: 100,
+  marginRight: 100,
+  borderColor: 'black',
+  borderWidth: 5,
+  borderRadius: 3,
+}
+
+class CarsPage extends React.PureComponent { 
 
   componentDidMount() {
-    this.props.loadWorkers();
-    console.log(this.props.workers);
-    if (this.props.username && this.props.username.trim().length > 0) {
-      this.props.onSubmitForm();
-    }
+    this.props.loadCars();
+    console.log(this.props.cars);
   }
-/*
-    border-bottom-width: 10px !important;
-    border-color: black !important;
-*/
-  renderAllUsers() {
-    const { workers } = this.props;
-    console.log(workers, 'IN MAP')
 
-    return workers.map( val => {
+  renderAllUsers() {
+    const { cars } = this.props;
+    console.log(cars, 'cars IN MAP')
+
+    return cars.map( val => {
       return(
         <div
           key={val.id}
           style={divLineStyle}
           onClick={() => { console.log(val.id, 'CLICKED')}}
          >
-          <H2 style={{}}>
-            {val.name}
+          <H2>
+            {val.brand + ' ' + val.type}
           </H2>
-          <H2 style={{}}>
-            {val.position}
+          <H2>
+            {val.licence_plate}
           </H2>
-          <H2 style={{}}>
-            {val.email}
+          <H2>
+            {val.year}
           </H2>
         </div>
       );
@@ -79,29 +80,42 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
       <div
         style={divLineStyle}
       >
-        <H1 style={{}}>
-          NÉV
+        <H1 >
+          KOCSI
         </H1>
-        <H1 style={{}}>
-          POZÍCIÓ
+        <H1>
+          RENDSZÁM
         </H1>
-        <H1 style={{}}>
-          EMAIL CÍM
+        <H1 >
+          ÉVJÁRAT
         </H1>
       </div>
     );
   }
 
+  renderAddCarsButton() {
+    return(
+      <div
+        style={newCarButtonContainerStyle}
+      >
+        <div style={addNewCarButton} onClick={() => this.addNewCar()}>
+          <Link to='new' params={{ newPage: 'car' }} >
+            <H2> ÚJ AUTÓ HOZZÁADÁSA</H2>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  addNewCar() {
+    console.log('u pressed me')
+  }
+
   render() {
-    const { loading, error, repos, workers } = this.props;
-    const reposListProps = {
-      loading,
-      error,
-      repos,
-    };
+    const { loading, error, cars } = this.props;
     console.log(error, 'error in render')
-    if (!loading && workers) {
-      console.log(this.props.workers, 'workers in render')
+    if (!loading && cars) {
+      console.log(this.props.cars, 'workers in render')
       return (
         <div>
           <Helmet
@@ -112,6 +126,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           />
           <div>
             <CenteredSection>
+              {this.renderAddCarsButton()}
               {this.renderTableHeader()}
               {this.renderAllUsers()}
             </CenteredSection>
@@ -123,7 +138,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
       return (
         <div>
         <Helmet
-          title="Home Page"
+          title="CARS Page"
           meta={[
             { name: 'description', content: 'Útnyílvántartó admin felület' },
           ]}
@@ -158,40 +173,22 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 }
 
-HomePage.propTypes = {
+CarsPage.propTypes = {
   loading: React.PropTypes.bool,
-  error: React.PropTypes.oneOfType([
-    React.PropTypes.object,
-    React.PropTypes.bool,
-  ]),
-  repos: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.bool,
-  ]),
-  onSubmitForm: React.PropTypes.func,
-  username: React.PropTypes.string,
-  onChangeUsername: React.PropTypes.func,
+  cars: React.PropTypes.array,
+  loadCars: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => createStructuredSelector({
-  repos: makeSelectRepos(),
-  username: makeSelectUsername(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  workers: allWorkers(),
+  cars: allCars(),
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onChangeUsername: (evt) => dispatch(changeUsername(evt.target.value)),
-    onSubmitForm: (evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(loadRepos());
-    },
-    loadWorkers: () => dispatch(loadWorkersData()),
+    loadCars: () => dispatch(loadCars()),
   };
 }
 
-
-// Wrap the component to inject dispatch and state into it
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(CarsPage);

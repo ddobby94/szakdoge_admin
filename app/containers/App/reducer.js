@@ -16,6 +16,9 @@ import {
   GET_ALL_WORKERS_DATA,
   GET_ALL_WORKERS_DATA_SUCCESS,
   GET_ALL_WORKERS_DATA_FAILURE,
+  GET_ALL_CARS,
+  GET_ALL_CARS_SUCCESS,
+  GET_ALL_CARS_FAILURE,
 } from './constants';
 
 // The initial state of the App
@@ -42,6 +45,20 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .setIn('workers', action.workers);
     case GET_ALL_WORKERS_DATA_FAILURE:
+      return state
+        .setIn('error', action.error)
+        .set('loading', false);
+    case GET_ALL_CARS:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .setIn('cars', null);
+    case GET_ALL_CARS_SUCCESS:
+      return state
+        .set('error', false)
+        .set('loading', false)
+        .setIn('cars', action.cars);
+    case GET_ALL_CARS_FAILURE:
       return state
         .setIn('error', action.error)
         .set('loading', false);

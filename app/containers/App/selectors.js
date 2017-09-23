@@ -21,14 +21,14 @@ const makeSelectError = () => createSelector(
   (globalState) => globalState.get('error')
 );
 
-const makeSelectRepos = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.getIn(['userData', 'repositories'])
-);
-
 const allWorkers = () => createSelector(
   selectGlobal,
   (globalState) => globalState.getIn('workers')
+);
+
+const allCars = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn('cars')
 );
 
 const makeSelectLocationState = () => {
@@ -52,7 +52,7 @@ export {
   makeSelectCurrentUser,
   makeSelectLoading,
   makeSelectError,
-  makeSelectRepos,
   makeSelectLocationState,
   allWorkers,
+  allCars,
 };
