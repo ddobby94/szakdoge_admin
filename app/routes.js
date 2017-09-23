@@ -32,7 +32,6 @@ export default function createRoutes(store) {
         importModules.then(([reducer, sagas, component]) => {
           injectReducer('home', reducer.default);
           injectSagas(sagas.default);
-
           renderRoute(component);
         });
 
@@ -47,6 +46,44 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
+      path: '/cars',
+      name: 'cars',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/CarsPage/sagas'),
+          import('containers/CarsPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([sagas, component]) => {
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/new',
+      name: 'new',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/AddNewItem/reducer'),
+          import('containers/AddNewItem/sagas'),
+          import('containers/AddNewItem'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('new', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+     {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {
