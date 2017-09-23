@@ -1,0 +1,3 @@
+export const LOAD_CAR = 'LOAD_CAR';
+export const LOAD_CAR_SUCCESS = 'LOAD_CAR_SUCCESS';
+export const LOAD_CAR_FAILURE = 'LOAD_CAR_FAILURE';

@@ -32,7 +32,7 @@ function appReducer(state = initialState, action) {
       return state
         .setIn('error', action.error)
         .set('loading', false);
-    case POST_NEW_CAR:
+    case POST_NEW_WORKER:
       return state
         .set('loading', true)
         .setIn('data', action.data);

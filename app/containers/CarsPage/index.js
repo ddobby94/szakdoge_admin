@@ -29,9 +29,9 @@ const divLineStyle = {
 }
 
 const newCarButtonContainerStyle = {
-  "display": "flex",
-  "flexDirecton": "row",
-  "justifyContent": "flex-end",
+  display: "flex",
+  flexDirecton: "row",
+  justifyContent: "flex-end",
 }
 
 const addNewCarButton = {
@@ -40,7 +40,8 @@ const addNewCarButton = {
   marginRight: 100,
   borderColor: 'black',
   borderWidth: 5,
-  borderRadius: 3,
+  borderRadius: 7,
+  backgroundColor: 'rgba(255,20,20,0.3)',
 }
 
 class CarsPage extends React.PureComponent { 
@@ -56,21 +57,23 @@ class CarsPage extends React.PureComponent {
 
     return cars.map( val => {
       return(
-        <div
-          key={val.id}
-          style={divLineStyle}
-          onClick={() => { console.log(val.id, 'CLICKED')}}
-         >
-          <H2>
-            {val.brand + ' ' + val.type}
-          </H2>
-          <H2>
-            {val.licence_plate}
-          </H2>
-          <H2>
-            {val.year}
-          </H2>
-        </div>
+        <Link to={'selectedCar?id=' + val.id}>
+          <div
+            key={val.id}
+            style={divLineStyle}
+            onClick={() => { console.log(val.id, 'CLICKED')}}
+          >
+            <H2>
+              {val.brand + ' ' + val.type}
+            </H2>
+            <H2>
+              {val.licence_plate}
+            </H2>
+            <H2>
+              {val.year}
+            </H2>
+          </div>
+        </Link>
       );
     })
   }
@@ -99,7 +102,7 @@ class CarsPage extends React.PureComponent {
         style={newCarButtonContainerStyle}
       >
         <div style={addNewCarButton} onClick={() => this.addNewCar()}>
-          <Link to='new' params={{ newPage: 'car' }} >
+          <Link to='new?new=car' >
             <H2> ÚJ AUTÓ HOZZÁADÁSA</H2>
           </Link>
         </div>

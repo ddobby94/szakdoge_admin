@@ -82,8 +82,47 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-    },
-     {
+    },  {
+      path: '/selectedWorker',
+      name: 'selectedWorker',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/SelectedWorker/reducer'),
+          import('containers/SelectedWorker/sagas'),
+          import('containers/SelectedWorker'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('selectedWorker', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/selectedCar',
+      name: 'selectedCar',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/SelectedCar/reducer'),
+          import('containers/SelectedCar/sagas'),
+          import('containers/SelectedCar'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('selectedCar', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+        },
+      },  {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

@@ -7,6 +7,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -31,40 +32,56 @@ const divLineStyle = {
   "justifyContent": "space-around",
 }
 
+const newCarButtonContainerStyle = {
+  display: "flex",
+  flexDirecton: "row",
+  justifyContent: "flex-end",
+}
+
+const addNewCarButton = {
+  width: 250,
+  height: 100,
+  marginRight: 100,
+  borderColor: 'black',
+  borderWidth: 5,
+  borderRadius: 7,
+  backgroundColor: 'rgba(255,20,20,0.3)',
+}
+
+const rowStyle = {
+  color: 'black',
+  textDecoration: 'none',
+}
+
 export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-  /**
-   * when initial state username is not null, submit the form to load repos
-   */
 
   componentDidMount() {
     this.props.loadWorkers();
     console.log(this.props.workers);
   }
-/*
-    border-bottom-width: 10px !important;
-    border-color: black !important;
-*/
+
   renderAllUsers() {
     const { workers } = this.props;
-    console.log(workers, 'IN MAP')
 
     return workers.map( val => {
       return(
-        <div
-          key={val.id}
-          style={divLineStyle}
-          onClick={() => { console.log(val.id, 'CLICKED')}}
-         >
-          <H2 style={{}}>
-            {val.name}
-          </H2>
-          <H2 style={{}}>
-            {val.position}
-          </H2>
-          <H2 style={{}}>
-            {val.email}
-          </H2>
-        </div>
+        <Link to={'selectedWorker?id=' + val.id}>
+          <div
+            key={val.id}
+            style={divLineStyle}
+            onClick={() => { console.log(val.id, 'CLICKED')}}
+          >
+            <H2 style={rowStyle}>
+              {val.name}
+            </H2>
+            <H2 style={rowStyle}>
+              {val.position}
+            </H2>
+            <H2 style={rowStyle}>
+              {val.email}
+            </H2>
+          </div>
+        </Link>
       );
     })
   }
@@ -83,6 +100,20 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
         <H1 style={{}}>
           EMAIL CÍM
         </H1>
+      </div>
+    );
+  }
+
+  renderAddWorkersButton() {
+    return(
+      <div
+        style={newCarButtonContainerStyle}
+      >
+        <div style={addNewCarButton} onClick={() => this.addNewCar()}>
+          <Link to='new?new=worker' >
+            <H2> ÚJ ALKALMAZOTT HOZZÁADÁSA</H2>
+          </Link>
+        </div>
       </div>
     );
   }
@@ -107,6 +138,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           />
           <div>
             <CenteredSection>
+              {this.renderAddWorkersButton()}
               {this.renderTableHeader()}
               {this.renderAllUsers()}
             </CenteredSection>

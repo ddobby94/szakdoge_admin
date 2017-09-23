@@ -14,7 +14,7 @@ const selectError = () => createSelector(
 
 const selectResponse = () => createSelector(
     selectNew,
-    (homeState) => homeState.get('response')
+    (homeState) => homeState.getIn('response')
 );
 
 const selectSentData = () => createSelector(

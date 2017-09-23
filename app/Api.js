@@ -21,12 +21,21 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
         data,
     )
 
-  const addnewWorker = (id, data) =>
-    api.post(
+  const addNewWorker = (id, data) =>
+    api.put(
         '/workers/' + id + '.json',
         data,
     )
+    
+  const loadSelectedWorker = (id) =>
+    api.get(
+      '/workers/' + id + '.json'
+    )
 
+  const loadSelectedCar = (id) =>
+    api.get(
+      '/cars/' + id + '.json'
+    )
   /*
 
   const getUser = (authData, username) =>
@@ -62,7 +71,9 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
   
   return {
     addNewCar,
-    addnewWorker,
+    addNewWorker,
+    loadSelectedWorker,
+    loadSelectedCar,
   }
 }
 
