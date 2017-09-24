@@ -14,7 +14,7 @@ import { createStructuredSelector } from 'reselect';
 import { makeSelectLoading, makeSelectError, allCars } from 'containers/App/selectors';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
-
+import DataTable from 'components/DataTable'
 import AtPrefix from './AtPrefix';
 import CenteredSection from './CenteredSection';
 import messages from './messages';
@@ -115,7 +115,7 @@ class CarsPage extends React.PureComponent {
   }
 
   render() {
-    const { loading, error, cars } = this.props;
+    const { loading, error, cars, location } = this.props;
     console.log(error, 'error in render')
     if (!loading && cars) {
       console.log(this.props.cars, 'workers in render')
@@ -128,12 +128,8 @@ class CarsPage extends React.PureComponent {
             ]}
           />
           <div>
-            <CenteredSection>
-              {this.renderAddCarsButton()}
-              {this.renderTableHeader()}
-              {this.renderAllUsers()}
-            </CenteredSection>
-           
+            {this.renderAddCarsButton()}
+            <DataTable data={cars} mainHeaderName={'AUTÓK'} location={location} />
           </div>
         </div>
       );

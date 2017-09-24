@@ -14,6 +14,7 @@ import { createStructuredSelector } from 'reselect';
 import { makeSelectLoading, makeSelectError, allWorkers } from 'containers/App/selectors';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
+import DataTable from 'components/DataTable'
 
 import CenteredSection from './CenteredSection';
 import Form from './Form';
@@ -58,6 +59,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   componentDidMount() {
     this.props.loadWorkers();
     console.log(this.props.workers);
+    console.log(this.props,'ASDASD')
   }
 
   renderAllUsers() {
@@ -119,7 +121,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 
   render() {
-    const { loading, error, repos, workers } = this.props;
+    const { loading, error, repos, workers, location } = this.props;
     const reposListProps = {
       loading,
       error,
@@ -137,12 +139,8 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
             ]}
           />
           <div>
-            <CenteredSection>
-              {this.renderAddWorkersButton()}
-              {this.renderTableHeader()}
-              {this.renderAllUsers()}
-            </CenteredSection>
-           
+            {this.renderAddWorkersButton()}
+            <DataTable data={workers} mainHeaderName={'ALKALMAZOTTAK'} location={location} />
           </div>
         </div>
       );
