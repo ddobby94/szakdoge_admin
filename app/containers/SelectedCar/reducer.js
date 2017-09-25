@@ -41,7 +41,8 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', false)
         .set('loading', false)
-        .setIn('carDetails', action.carDetails);
+        .setIn('carDetails', action.carDetails)
+        .setIn('allRoutes', action.allRoutes)
     case LOAD_CAR_FAILURE:
       return state
         .setIn('error', action.error)

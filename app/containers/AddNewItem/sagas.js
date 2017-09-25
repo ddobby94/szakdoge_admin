@@ -29,7 +29,6 @@ export function* addNewWorker(action) {
     try {
       // const response = yield call(api.addPartnerContacts, authData, contacts, deletedContacts)
       const response = yield call(realApi.addNewWorker, id, data);
-      console.log('response', response)
       yield put(postNewWorkerSuccess(response));
     } catch (err) {
       yield put(postNewWorkerFailure(err));

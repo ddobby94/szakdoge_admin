@@ -16,7 +16,6 @@ export function* getWorkers() {
   try {
     // Call our request helper (see 'utils/request')
     const workers = yield call(request, requestURL);
-    console.log('workers', workers)
     yield put(loadWorkersDataSuccess(workers));
   } catch (err) {
     yield put(loadWorkersDataFailure(err));

@@ -10,21 +10,15 @@ import H1 from 'components/H1';
 import H2 from 'components/H2';
 import CenteredSection from '../HomePage/CenteredSection';
 import { loadCars } from '../App/actions';
-import { selectLoading, selectCarDetails, selectError } from './selectors';
-
+import { selectLoading, selectCarDetails, selectError, selectAllRoutes } from './selectors';
+import { setData } from '../../utils/RoutesData'
+import s from '../Styles';
 const contentWidthPercentage = 60;
 const contentMarginLeft = window.innerWidth * contentWidthPercentage / 300;
-console.log(contentMarginLeft, 'FUCK', window, 'WINDOW')
 
 const basicDataContainer ={
   width: contentWidthPercentage + '%',
   marginLeft: contentMarginLeft + 'px',
-};
-
-const lineComponent = {
-  display: "flex",
-  flexDirecton: "row",
-  justifyContent: "space-between",
 };
 
 class SelectedCar extends React.PureComponent {
@@ -37,6 +31,7 @@ class SelectedCar extends React.PureComponent {
       carDetails: null,
       showBasicDatas: true,
       showPreviousRoutes: true,
+      allRoutes: [],
     };
    
    // this.carSubmit = this.carSubmit.bind(this);
@@ -47,9 +42,9 @@ class SelectedCar extends React.PureComponent {
   }
 
   componentWillReceiveProps(newProps) {
-    console.log('fuck2', newProps)
     this.setState({
-      carDetails: this.props.selectedCarDetails
+      carDetails: this.props.selectedCarDetails,
+      allRoutes: this.props.allRoutes,
     });
   }
 
@@ -58,35 +53,35 @@ class SelectedCar extends React.PureComponent {
 
     return (
       <div style={basicDataContainer}>
-        <div style={lineComponent}>
+        <div style={s.lineComponent}>
           <H2>AUTÓ:</H2>
           <h3>{selectedCarDetails.brand + ' ' + selectedCarDetails.type}</h3>
         </div>
-        <div style={lineComponent}>
+        <div style={s.lineComponent}>
           <H2>ID:</H2>
           <h3>{selectedCarDetails.id}</h3>
         </div>
-        <div style={lineComponent}>
+        <div style={s.lineComponent}>
           <H2>SAJÁT TÖMEG (kg):</H2>
           <h3>{selectedCarDetails.own_weight_kg}</h3>
         </div>
-        <div style={lineComponent}>
+        <div style={s.lineComponent}>
           <H2>ÉVJÁRAT:</H2>
           <h3>{selectedCarDetails.year}</h3>
         </div>
-        <div style={lineComponent}>
+        <div style={s.lineComponent}>
           <H2>ÜZEMANYAG TÍPUSA:</H2>
           <h3>{selectedCarDetails.is_it_diesel? 'DÍZEL' : 'BENZIN'}</h3>
         </div>
-        <div style={lineComponent}>
+        <div style={s.lineComponent}>
           <H2>SZÍN:</H2>
           <h3>{selectedCarDetails.color}</h3>
         </div>
-        <div style={lineComponent}>
+        <div style={s.lineComponent}>
           <H2>TELJESÍTMÉNY (lóerő):</H2>
           <h3>{selectedCarDetails.performance_hp}</h3>
         </div>
-        <div style={lineComponent}>
+        <div style={s.lineComponent}>
           <H2>RENDSZÁM:</H2>
           <h3>{selectedCarDetails.licence_plate}</h3>
         </div>
@@ -95,19 +90,20 @@ class SelectedCar extends React.PureComponent {
   }
 
   getRoutesTable(){
-    const { selectedCarDetails, location } = this.props;
-    return (<div>TÁBLA!!</div>)
-    return (
-      <DataTable data={selectedCarDetails.previous_routes} mainHeaderName={'KORÁBBI UTAZÁSOK'} location={location} />
-    );
+    const { location, allRoutes } = this.props;
+    if (allRoutes) {
+      const data = setData(allRoutes)
+      console.log(data)
+      return (
+        <DataTable data={data} mainHeaderName={'KORÁBBI UTAZÁSOK'} location={location} showDropDown={false} />
+      );
+    }
   }
 
   render() {
     const { selectedCarDetails, loading, error } = this.props;
-    const { carDetails, showBasicDatas, showPreviousRoutes } = this.state;
-    console.log('fuck')
+    const { carDetails, showBasicDatas, showPreviousRoutes, allRoutes } = this.state;
     if (!loading && selectedCarDetails) {
-      console.log(this.props.cars, 'cars in render')
       return (
         <div>
           <Helmet
@@ -119,17 +115,19 @@ class SelectedCar extends React.PureComponent {
           <div>
             <CenteredSection>
               <div 
-                style={{ backgroundColor: 'gray', widht: '100%', height: '30px' }}
+                style={s.clickAbleHeaderLine}
                 onClick={() => {this.setState({showBasicDatas: !showBasicDatas})}}
               >
-              <h4>Autó adatai</h4>
+                <h4>Autó adatai</h4>
+                <h4>{showBasicDatas? 'HIDE ME' : 'SHOW ME' }</h4>
               </div>
               {showBasicDatas && this.getBasicDatas()}
               <div 
-                style={{ backgroundColor: 'gray', widht: '100%', height: '30px' }}
+                style={s.clickAbleHeaderLine}
                 onClick={() => {this.setState({showPreviousRoutes: !showPreviousRoutes})}}
               >
-              <h4>Korábbi utazások</h4>
+               <h4>Korábbi utazások</h4>
+               <h4>{showPreviousRoutes? 'HIDE ME' : 'SHOW ME' }</h4>
               </div>
               {showPreviousRoutes && this.getRoutesTable()}
             </CenteredSection>
@@ -185,6 +183,7 @@ const mapStateToProps = (state) => createStructuredSelector({
     error: selectError(),
     loading: selectLoading(),
     selectedCarDetails: selectCarDetails(),
+    allRoutes: selectAllRoutes(),
 });
 
 export function mapDispatchToProps(dispatch) {

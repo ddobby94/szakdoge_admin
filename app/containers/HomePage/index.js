@@ -8,19 +8,15 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router';
+import HeaderLink from 'components/Header/HeaderLink';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-
 import { makeSelectLoading, makeSelectError, allWorkers } from 'containers/App/selectors';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 import DataTable from 'components/DataTable'
 
 import CenteredSection from './CenteredSection';
-import Form from './Form';
-import Input from './Input';
-import Section from './Section';
-import messages from './messages';
 import { loadRepos, loadWorkersData } from '../App/actions';
 import { changeUsername } from './actions';
 import { makeSelectUsername } from './selectors';
@@ -58,8 +54,6 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
 
   componentDidMount() {
     this.props.loadWorkers();
-    console.log(this.props.workers);
-    console.log(this.props,'ASDASD')
   }
 
   renderAllUsers() {
@@ -71,7 +65,6 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           <div
             key={val.id}
             style={divLineStyle}
-            onClick={() => { console.log(val.id, 'CLICKED')}}
           >
             <H2 style={rowStyle}>
               {val.name}
@@ -108,14 +101,10 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
 
   renderAddWorkersButton() {
     return(
-      <div
-        style={newCarButtonContainerStyle}
-      >
-        <div style={addNewCarButton} onClick={() => this.addNewCar()}>
-          <Link to='new?new=worker' >
-            <H2> ÚJ ALKALMAZOTT HOZZÁADÁSA</H2>
-          </Link>
-        </div>
+      <div style={newCarButtonContainerStyle}>
+        <HeaderLink to='new?new=worker' >
+          <p id='newWorker'> ÚJ ALKALMAZOTT HOZZÁADÁSA</p>
+        </HeaderLink>
       </div>
     );
   }
@@ -127,9 +116,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
       error,
       repos,
     };
-    console.log(error, 'error in render')
     if (!loading && workers) {
-      console.log(this.props.workers, 'workers in render')
       return (
         <div>
           <Helmet

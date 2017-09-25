@@ -12,14 +12,27 @@ const realApi = API.create()
 
 import request from 'utils/request';
 
+function* loadCarRoutes(id) {
+  const resp = yield call(realApi.loadRoutesById, id);
+  console.log(resp, 'inload routes')
+  return resp;
+}
+
 export function* loadSelectedCar(action) {
   const { id } = action
   try {
     // const response = yield call(api.addPartnerContacts, authData, contacts, deletedContacts)
     const response = yield call(realApi.loadSelectedCar, id);
-    console.log(response)
+    console.log('first response: ',response)
     if (response.ok) {
-      yield put(loadSelectedCarSuccess(response.data));
+      const data = response.data;
+      const routes = data.routes_id || [];
+      let allRoutes = [];
+      for ( let i = 0 ; i < routes.length ; i++) {
+        let routeResponse = yield call(realApi.loadRoutesById, routes[i]);
+        allRoutes.push(routeResponse.data)
+      }
+      yield put(loadSelectedCarSuccess(response.data, allRoutes));
     } else {
       throw response.problem
     }

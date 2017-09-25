@@ -11,10 +11,11 @@ import {
     };
   }
 
-  export function loadSelectedCarSuccess(carDetails) {
+  export function loadSelectedCarSuccess(carDetails, allRoutes) {
     return {
       type: LOAD_CAR_SUCCESS,
       carDetails,
+      allRoutes,
     };
   }
 

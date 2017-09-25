@@ -17,9 +17,15 @@ export function* loadSelectedWorker(action) {
   try {
     // const response = yield call(api.addPartnerContacts, authData, contacts, deletedContacts)
     const response = yield call(realApi.loadSelectedWorker, id);
-    console.log(response)
     if (response.ok) {
-      yield put(loadSelectedWorkerSuccess(response.data));
+      const data = response.data;
+      const routes = data.routes_id || [];
+      let allRoutes = [];
+      for ( let i = 0 ; i < routes.length ; i++) {
+        let routeResponse = yield call(realApi.loadRoutesById, routes[i]);
+        allRoutes.push(routeResponse.data)
+      }
+      yield put(loadSelectedWorkerSuccess(response.data, allRoutes));
     } else {
       throw response.problem
     }

@@ -16,7 +16,7 @@ export function* getCars() {
   try {
     // Call our request helper (see 'utils/request')
     const cars = yield call(request, requestURL);
-    console.log('cars', cars)
+
     yield put(loadCarsSuccess(cars));
   } catch (err) {
     yield put(loadCarsFailure(err));

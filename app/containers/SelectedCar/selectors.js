@@ -17,9 +17,15 @@ const selectCarDetails = () => createSelector(
     (homeState) => homeState.getIn('carDetails')
 );
 
+const selectAllRoutes = () => createSelector(
+  selectedCar,
+  (homeState) => homeState.getIn('allRoutes')
+);
+
 export {
   selectedCar,
   selectLoading,
   selectError,
   selectCarDetails,
+  selectAllRoutes,
 };

@@ -17,9 +17,15 @@ const selectWorkerDetails = () => createSelector(
     (homeState) => homeState.getIn('workerDetails')
 );
 
+const selectAllRoutes = () => createSelector(
+  selectedWorker,
+  (homeState) => homeState.getIn('workerAllRoutes')
+);
+
 export {
   selectedWorker,
   selectLoading,
   selectError,
   selectWorkerDetails,
+  selectAllRoutes,
 };

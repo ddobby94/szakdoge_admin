@@ -36,6 +36,12 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
     api.get(
       '/cars/' + id + '.json'
     )
+
+  const loadRoutesById = (id) =>
+    api.get(
+      '/routes/' + id + '.json'
+    )
+
   /*
 
   const getUser = (authData, username) =>
@@ -74,6 +80,7 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
     addNewWorker,
     loadSelectedWorker,
     loadSelectedCar,
+    loadRoutesById,
   }
 }
 

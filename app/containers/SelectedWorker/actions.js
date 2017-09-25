@@ -11,10 +11,11 @@ import {
     };
   }
 
-  export function loadSelectedWorkerSuccess(workerDetails) {
+  export function loadSelectedWorkerSuccess(workerDetails, workerAllRoutes) {
     return {
       type: LOAD_WORKER_SUCCESS,
       workerDetails,
+      workerAllRoutes,
     };
   }
 

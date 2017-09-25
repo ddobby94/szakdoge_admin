@@ -1,86 +1,28 @@
-/*
- * HomePage
- *
- * This is the first thing users see of our App, at the '/' route
- */
-
 import React from 'react';
 import Helmet from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
+
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-
 import { postNewCar, postNewWorker } from './actions';
-import H1 from 'components/H1';
 import H2 from 'components/H2';
 import CenteredSection from '../HomePage/CenteredSection';
 import { loadCars } from '../App/actions';
 import { allCars,  allWorkers } from 'containers/App/selectors';
 import { selectLoading, selectResponse, selectError } from './selectors';
+import s from '../Styles';
 
-
-const divLineStyle = {
-  borderBottomWidth: "10px",
-  borderColor: "black",
-  display: "flex",
-  flexDirecton: "column",
-  justifyContent: "space-around",
-}
-
-const newCarButtonContainerStyle = {
-  display: "flex",
-  flexDirecton: "row",
-  justifyContent: "flex-end",
-}
-
-const addNewCarButton = {
-  width: 200,
-  height: 100,
-  marginRight: 100,
-  borderColor: 'black',
-  borderWidth: 5,
-  borderRadius: 3,
-}
-
-const inputStyle = {
-  borderColor: 'black',
-  borderWidth: 5,
-  borderRadius: 3,
-  backgroundColor: 'pink',
-  fontSize: 25,
-}
-
-const rowFlex = {
-  display: "flex",
-  flexDirecton: 'row',
-  justifyContent: "space-around",
-}
-
-const licenceInput = {
-  ...inputStyle,
-  width: '60px',
-  height: '40px',
-  marginTop: '20px',
-}
-
-const submitButton = {
-  fontSize: 20,
-  height: '70px',
-  marginTop: '20px',
-  backgroundColor: 'blue'
-}
 
 class NewItemPage extends React.PureComponent {
   constructor(props) {
     super(props);
-    console.log(props);
-    console.log(props.location.query.new)
     const isItCarsPage = props.location.query.new === 'car'
+    let carsLength = props.cars ? props.cars.length : 3
+    let workersLength = props.workers? props.workers.length : 4 // BIG FCKN TODO
     this.state = {
       progress: -1,
       loadedRoutes: props.location && [props.location.pathname],
       newCarPage: isItCarsPage,
-      length: isItCarsPage? props.cars.length : props.workers.length,
+      length: isItCarsPage? carsLength : workersLength,
     };
     this.carSubmit = this.carSubmit.bind(this);
     this.setLicencePlate = this.setLicencePlate.bind(this);
@@ -93,41 +35,41 @@ class NewItemPage extends React.PureComponent {
 
   renderCarsFrom(){
     return(
-      <div style={divLineStyle}>
-        <form style={{ backgroundColor: 'aqua'}} onSubmit={this.carSubmit}>
+      <div style={s.divLineStyleColumn}>
+        <form onSubmit={this.carSubmit}>
             <H2>HENGERŰRTARTALOM (köbcenti)</H2>
-            <input type="text" value={this.state.cylinder_capacity} style={inputStyle}
+            <input type="text" value={this.state.cylinder_capacity} style={s.inputStyle}
              onChange={(event) => this.setState({cylinder_capacity: event.target.value})} />
             <H2>AUTÓ SAJÁT TÖMEGE (kg)</H2>
-            <input type="text" value={this.state.own_weight_kg} style={inputStyle}
+            <input type="text" value={this.state.own_weight_kg} style={s.inputStyle}
             onChange={(event) => this.setState({own_weight_kg: event.target.value})} />
             <H2>MÁRKANÉV</H2>
-            <input type="text" value={this.state.brand} style={inputStyle}
+            <input type="text" value={this.state.brand} style={s.inputStyle}
              onChange={(event) => this.setState({brand: event.target.value})} />
             <H2>TÍPUS</H2>
-            <input type="text" value={this.state.type} style={inputStyle}
+            <input type="text" value={this.state.type} style={s.inputStyle}
              onChange={(event) => this.setState({type: event.target.value})} />
             <H2>ÉVJÁRAT</H2>
-            <input type="text" value={this.state.year} style={inputStyle}
+            <input type="text" value={this.state.year} style={s.inputStyle}
              onChange={(event) => this.setState({year: event.target.value})} />
             <H2>TELJESÍTMÉNY (Lóerő)</H2>
-            <input type="text" value={this.state.performance_hp} style={inputStyle}
+            <input type="text" value={this.state.performance_hp} style={s.inputStyle}
              onChange={(event) => this.setState({performance_hp: event.target.value})} />
             <H2>isItDiesel</H2>
-            <input type="text" value={this.state.is_it_diesel} style={inputStyle}
+            <input type="text" value={this.state.is_it_diesel} style={s.inputStyle}
              onChange={(event) => this.setState({is_it_diesel: !!event.target.value})} />
              <H2>SZÍN</H2>
-            <input type="text" value={this.state.color} style={inputStyle}
+            <input type="text" value={this.state.color} style={s.inputStyle}
              onChange={(event) => this.setState({color: event.target.value})} />
             <H2>RENDSZÁM</H2>
-            <div style={rowFlex}>
-              <input type="text" value={this.state.licence_plate1} style={licenceInput}
+            <div style={s.rowFlexSpaceAround}>
+              <input type="text" value={this.state.licence_plate1} style={s.licenceInput}
                 onChange={(event) => this.setLicencePlate(event.target.value, 'letters')} />
               <H2>-</H2>
-              <input type="text" value={this.state.licence_plate2} style={licenceInput}
+              <input type="text" value={this.state.licence_plate2} style={s.licenceInput}
                 onChange={(event) => this.setLicencePlate(event.target.value, 'numbers')} />
              </div>
-            <div style={submitButton} onClick={this.carSubmit}> CLICK ME! </div>
+            <div style={s.submitButton} onClick={this.carSubmit}> MENTÉS </div>
         </form>
       </div>
     );
@@ -218,24 +160,24 @@ class NewItemPage extends React.PureComponent {
 
   renderWorkerForm() {
     return(
-      <div style={divLineStyle}>
-        <form style={{ backgroundColor: 'aqua'}} onSubmit={this.workerSubmit}>
+      <div style={s.divLineStyleColumn}>
+        <form onSubmit={this.workerSubmit}>
             <H2>TELJES NÉV</H2>
-            <input type="text" value={this.state.name} style={inputStyle}
+            <input type="text" value={this.state.name} style={s.inputStyle}
              onChange={(event) => this.setState({name: event.target.value})} />
             <H2>SZÜLETÉSI DÁTUM</H2>
-            <input type="text" value={this.state.dateOfBirth} style={inputStyle}
+            <input type="text" value={this.state.dateOfBirth} style={s.inputStyle}
             onChange={(event) => this.setState({dateOfBirth: event.target.value})} />
             <H2>TELEFONSZÁM</H2>
-            <input type="text" value={this.state.phoneNumber} style={inputStyle}
+            <input type="text" value={this.state.phoneNumber} style={s.inputStyle}
              onChange={(event) => this.setState({phoneNumber: event.target.value})} />
             <H2>POZÍCIÓ</H2>
-            <input type="text" value={this.state.position} style={inputStyle}
+            <input type="text" value={this.state.position} style={s.inputStyle}
              onChange={(event) => this.setState({position: event.target.value})} />
-            <H2>EMAILCÍM</H2>
-            <input type="text" value={this.state.email} style={inputStyle}
+            <H2>EMAIL CÍM</H2>
+            <input type="text" value={this.state.email} style={s.inputStyle}
              onChange={(event) => this.setState({email: event.target.value})} />
-            <div style={submitButton} onClick={this.workerSubmit}> CLICK ME! </div>
+            <div style={s.submitButton} onClick={this.workerSubmit}> MENTÉS </div>
         </form>
       </div>
     );
@@ -281,10 +223,7 @@ class NewItemPage extends React.PureComponent {
   }
 
   render() {    
-    console.log(this.props.newPage, 'new in render')
     const { response, loading, error } = this.props;
-    console.log(response, 'respo');
-    console.log(loading, 'loading')
     if (response && response.ok && !loading) {
       window.alert(' Az adatokat sikeresen elmentettük! ');
     }
@@ -292,7 +231,6 @@ class NewItemPage extends React.PureComponent {
       window.alert('Hiba történt!');
     }
     if (true) {
-      console.log(this.props.cars, 'workers in render')
       return (
         <div>
           <Helmet

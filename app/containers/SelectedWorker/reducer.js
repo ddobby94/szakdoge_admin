@@ -41,7 +41,8 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', false)
         .set('loading', false)
-        .setIn('workerDetails', action.workerDetails);
+        .setIn('workerDetails', action.workerDetails)
+        .setIn('workerAllRoutes', action.workerAllRoutes);
     case LOAD_WORKER_FAILURE:
       return state
         .setIn('error', action.error)

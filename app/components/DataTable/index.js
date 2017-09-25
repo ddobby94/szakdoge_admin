@@ -3,51 +3,24 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import { browserHistory } from 'react-router';
 
-const consoleLogEverything = (props) => {
-  console.log('props.headernames : ', props.headerNames)
-  console.log('columnNumbers: ', props.columnNumbers )
-  console.log('data: ', props.data )
-}
-
 class DataTable extends React.Component { 
   constructor(props) {
     super(props);
-    let numberOfColumns =  props.columnNumbers || Object.keys(props.data[0]).length;
-    let headerNames = props.headerNames || [];
-    if (headerNames.length > numberOfColumns) {
-      consoleLogEverything(props);
-      headerNames = headerNames.slice(0, numberOfColumns)
-    } else if (headerNames.length < numberOfColumns) {
-      consoleLogEverything(props);
-      while (headerNames.length !== numberOfColumns) {
-        let time = setTimeout(function(){}, 10);
-        headerNames.push('N/A');
-      }
-    }
-    console.log(props.data,' DATAAA')
+    const data =  props.data
+    console.log(data)
+
     this.state = {
-        numberOfColumns,
-        headerNames,
         mainHeaderName: props.mainHeaderName || 'TÁBLÁZAT',
-        data: props.data,
+        data: data,
         location: props.location.pathname,
     };
   }
- 
-  makeData() {
-    return [
-      {
-        firstName: "judge",
-        lastName: "babies",
-        age: 16
-      }
-    ];
-  }
 
   tableColumns() {
-    const { mainHeaderName, headerNames, location } = this.state;
-    console.log(location);
-
+    let { mainHeaderName, location } = this.state;
+    if (location[0] !== '/') {
+      location = '/' + location;
+    }
     let columns;
     if (location === '/') {
       columns = [
@@ -97,13 +70,12 @@ class DataTable extends React.Component {
               <input
                 type='text'
                 value={row.value}
-                onChange={()=> {console.log('somthing' ,row)}}
               />
             </div>
           ) */
         },
       ]
-    } else if (location === '/selectedCar') {
+    } else if (location === '/selectedCar' || location === '/selectedWorker') {
       columns = [
         {
           Header: 'Dátum',
@@ -114,19 +86,28 @@ class DataTable extends React.Component {
           accessor: 'from',
         },
         {
+          Header: 'Indulási név',
+          accessor: 'from_name',
+        },
+        {
           Header: 'Hova',
           accessor: 'to',
         },
         {
-          Header: 'Évjárat',
-          accessor: 'year',
+          Header: 'Érkezési név',
+          accessor: 'to_name',
+        },
+        {
+          Header: 'Típus',
+          accessor: 'type',
         },
       ]
-    } else if (location === '/selectedWorker') {
-
     }
-
-    console.log('COLUMNS : ', columns)
+    console.log('selectedWorker: ', columns)
+    console.log('selectedWorker: ', columns)
+    console.log('selectedWorker: ', columns)
+    
+    console.log('LOC: ', location)
     return [{
       Header: mainHeaderName,
       columns,
@@ -155,6 +136,18 @@ class DataTable extends React.Component {
     return toUrl;
   }
 
+  getSubComponent(row) {
+    if (!this.props.showDropDown) {
+     return () => null;
+    } else {
+      return () => {(
+        <div>
+        FUCK
+      </div>
+      )}
+    }
+  }
+
   render() {
     return (
       <div>
@@ -167,7 +160,6 @@ class DataTable extends React.Component {
             return {
               onClick: (e, handleOriginal) => {
                 const toUrl = this.getPath(rowInfo.index);
-                console.log(rowInfo)
                 if (toUrl) {
                   browserHistory.push(toUrl);
                 } else {
@@ -176,16 +168,7 @@ class DataTable extends React.Component {
               }
             }
           }}
-          SubComponent={(row) => {
-            console.log(row,'_------___--_____--____---____---____----___----___')
-            let fuck = 'engine size: ' + this.state.data[row.index].engine_size
-            console.log(fuck)
-           /* return (
-              <div>
-                {fuck}
-              </div>
-            ) */
-          }}
+          SubComponent={this.getSubComponent()}
         />
       </div>
     );
