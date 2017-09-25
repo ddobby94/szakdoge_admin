@@ -26,11 +26,11 @@ import { changeUsername } from './actions';
 import { makeSelectUsername } from './selectors';
 
 const divLineStyle = {
-  "borderBottomWidth": "10px",
-  "borderColor": "black",
-  "display": "flex",
-  "flexDirecton": "row",
-  "justifyContent": "space-around",
+  borderBottomWidth: "10px",
+  borderColor: "black",
+  display: "flex",
+  flexDirecton: "row",
+  justifyContent: "space-around",
 }
 
 const newCarButtonContainerStyle = {

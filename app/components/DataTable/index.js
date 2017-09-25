@@ -68,7 +68,7 @@ class DataTable extends React.Component {
           accessor: 'phoneNumber',
         },
       ]
-    } else if (location === '/cars') {
+    } else if (location === '/cars') {  
       columns = [
         {
           Header: 'Márka',
@@ -85,7 +85,7 @@ class DataTable extends React.Component {
         {
           Header: 'Évjárat',
           accessor: 'year',
-          Cell: row => (
+          /*Cell: row => (
             <div
               style={{
                 width: '100%',
@@ -100,7 +100,7 @@ class DataTable extends React.Component {
                 onChange={()=> {console.log('somthing' ,row)}}
               />
             </div>
-          )
+          ) */
         },
       ]
     } else if (location === '/selectedCar') {
@@ -141,7 +141,7 @@ class DataTable extends React.Component {
         toUrl = 'selectedWorker?id=' + index;
         break;
       case '/cars':
-        //toUrl = 'selectedCar?id=' + index;
+        toUrl = 'selectedCar?id=' + index;
         break;
       case '/selectedWorker':
        // toUrl = 'selectedWorker?id=' + index;
@@ -180,11 +180,11 @@ class DataTable extends React.Component {
             console.log(row,'_------___--_____--____---____---____----___----___')
             let fuck = 'engine size: ' + this.state.data[row.index].engine_size
             console.log(fuck)
-            return (
+           /* return (
               <div>
                 {fuck}
               </div>
-            )
+            ) */
           }}
         />
       </div>

@@ -95,12 +95,12 @@ class NewItemPage extends React.PureComponent {
     return(
       <div style={divLineStyle}>
         <form style={{ backgroundColor: 'aqua'}} onSubmit={this.carSubmit}>
-            <H2>FOGYASZTÁS MAX</H2>
-            <input type="text" value={this.state.avarage_consuming_max} style={inputStyle}
-             onChange={(event) => this.setState({avarage_consuming_max: event.target.value})} />
-            <H2>FOGYASZTÁS MIN</H2>
-            <input type="text" value={this.state.avarage_consuming_min} style={inputStyle}
-            onChange={(event) => this.setState({avarage_consuming_min: event.target.value})} />
+            <H2>HENGERŰRTARTALOM (köbcenti)</H2>
+            <input type="text" value={this.state.cylinder_capacity} style={inputStyle}
+             onChange={(event) => this.setState({cylinder_capacity: event.target.value})} />
+            <H2>AUTÓ SAJÁT TÖMEGE (kg)</H2>
+            <input type="text" value={this.state.own_weight_kg} style={inputStyle}
+            onChange={(event) => this.setState({own_weight_kg: event.target.value})} />
             <H2>MÁRKANÉV</H2>
             <input type="text" value={this.state.brand} style={inputStyle}
              onChange={(event) => this.setState({brand: event.target.value})} />
@@ -110,12 +110,15 @@ class NewItemPage extends React.PureComponent {
             <H2>ÉVJÁRAT</H2>
             <input type="text" value={this.state.year} style={inputStyle}
              onChange={(event) => this.setState({year: event.target.value})} />
-            <H2>MOTORMÉRET</H2>
-            <input type="text" value={this.state.engine_size} style={inputStyle}
-             onChange={(event) => this.setState({engine_size: event.target.value})} />
+            <H2>TELJESÍTMÉNY (Lóerő)</H2>
+            <input type="text" value={this.state.performance_hp} style={inputStyle}
+             onChange={(event) => this.setState({performance_hp: event.target.value})} />
             <H2>isItDiesel</H2>
-            <input type="text" value={this.state.isItDiesel} style={inputStyle}
-             onChange={(event) => this.setState({isItDiesel: !!event.target.value})} />
+            <input type="text" value={this.state.is_it_diesel} style={inputStyle}
+             onChange={(event) => this.setState({is_it_diesel: !!event.target.value})} />
+             <H2>SZÍN</H2>
+            <input type="text" value={this.state.color} style={inputStyle}
+             onChange={(event) => this.setState({color: event.target.value})} />
             <H2>RENDSZÁM</H2>
             <div style={rowFlex}>
               <input type="text" value={this.state.licence_plate1} style={licenceInput}
@@ -150,21 +153,22 @@ class NewItemPage extends React.PureComponent {
 
   carSubmit() {
     const { 
-        avarage_consuming_max,
-        avarage_consuming_min,
+        cylinder_capacity,
+        own_weight_kg,
         brand,
         type,
         year,
-        engine_size,
-        isItDiesel,
+        performance_hp,
+        is_it_diesel,
         licence_plate1,
         licence_plate2,
+        color,
     } = this.state;
-    if (!avarage_consuming_max || isNaN(avarage_consuming_max)) {
+    if (!cylinder_capacity || isNaN(cylinder_capacity)) {
       window.alert('Kérjük töltsd ki a max fogyasztást!');
       return ;
     }
-    if (!avarage_consuming_min || isNaN(avarage_consuming_min)) {
+    if (!own_weight_kg || isNaN(own_weight_kg)) {
       window.alert('Kérjük töltsd ki a min fogyasztást!');
       return ;
     }
@@ -176,11 +180,15 @@ class NewItemPage extends React.PureComponent {
       window.alert('Kérjük töltsd ki az autó márkanevét !');
       return ;
     }
+    if (!color || typeof color != 'string') {
+      window.alert('Kérjük töltsd ki az autó színét !');
+      return ;
+    }
     if (!year || isNaN(year) || year < 1950 || year > new Date().getFullYear()) {
       window.alert('Kérjük töltsd ki az autó típusát !');
       return ;
     }
-    if (!engine_size  || isNaN(engine_size)) {
+    if (!performance_hp  || isNaN(performance_hp)) {
       window.alert('Kérjük töltsd ki az autó motorméretét !');
       return ;
     }
@@ -194,13 +202,14 @@ class NewItemPage extends React.PureComponent {
     }
 
     const data = {
-        avarage_consuming_max,
-        avarage_consuming_min,
+        cylinder_capacity,
+        own_weight_kg,
         brand,
         type,
         year,
-        engine_size,
-        isItDiesel,
+        performance_hp,
+        is_it_diesel,
+        color,
         licence_plate: licence_plate1 + '-' + licence_plate2,
         id: this.state.length,
     }
