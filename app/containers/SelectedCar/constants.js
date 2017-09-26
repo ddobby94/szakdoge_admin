@@ -1,3 +1,6 @@
 export const LOAD_CAR = 'LOAD_CAR';
 export const LOAD_CAR_SUCCESS = 'LOAD_CAR_SUCCESS';
 export const LOAD_CAR_FAILURE = 'LOAD_CAR_FAILURE';
+export const EDIT_CAR = 'EDIT_CAR';
+export const EDIT_CAR_SUCCESS = 'EDIT_CAR_SUCCESS';
+export const EDIT_CAR_FAILURE = 'EDIT_CAR_FAILURE';

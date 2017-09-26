@@ -16,6 +16,9 @@ import {
   LOAD_CAR,
   LOAD_CAR_SUCCESS,
   LOAD_CAR_FAILURE,
+  EDIT_CAR,
+  EDIT_CAR_SUCCESS,
+  EDIT_CAR_FAILURE,
 } from './constants';
 
 // The initial state of the App
@@ -43,6 +46,21 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .setIn('carDetails', action.carDetails)
         .setIn('allRoutes', action.allRoutes)
+    case LOAD_CAR_FAILURE:
+      return state
+        .setIn('error', action.error)
+        .set('loading', false);
+    case LOAD_CAR:
+      return state
+        .set('loading', true)
+        .set('id', action.id)
+        .set('error', false)
+        .set('carDetails', null);
+    case LOAD_CAR_SUCCESS:
+      return state
+        .set('error', false)
+        .set('loading', false)
+        .setIn('carDetails', action.carDetails)
     case LOAD_CAR_FAILURE:
       return state
         .setIn('error', action.error)

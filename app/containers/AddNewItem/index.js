@@ -107,11 +107,11 @@ class NewItemPage extends React.PureComponent {
         color,
     } = this.state;
     if (!cylinder_capacity || isNaN(cylinder_capacity)) {
-      window.alert('Kérjük töltsd ki a max fogyasztást!');
+      window.alert('Kérjük töltsd ki a hengerűrtartalmat!');
       return ;
     }
     if (!own_weight_kg || isNaN(own_weight_kg)) {
-      window.alert('Kérjük töltsd ki a min fogyasztást!');
+      window.alert('Kérjük töltsd ki az autó saját tömegét!');
       return ;
     }
     if (!brand || typeof brand != 'string') {

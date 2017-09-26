@@ -7,13 +7,17 @@ class DataTable extends React.Component {
   constructor(props) {
     super(props);
     const data =  props.data
-    console.log(data)
-
     this.state = {
         mainHeaderName: props.mainHeaderName || 'TÁBLÁZAT',
         data: data,
         location: props.location.pathname,
     };
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.data) {
+      this.setState({ data: newProps.data })
+    }
   }
 
   tableColumns() {
@@ -103,11 +107,6 @@ class DataTable extends React.Component {
         },
       ]
     }
-    console.log('selectedWorker: ', columns)
-    console.log('selectedWorker: ', columns)
-    console.log('selectedWorker: ', columns)
-    
-    console.log('LOC: ', location)
     return [{
       Header: mainHeaderName,
       columns,

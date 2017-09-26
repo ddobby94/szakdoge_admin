@@ -1,5 +1,4 @@
 export const setData = (data) => {
-  console.log('ASDASDASD', data)
   return data.map( val => {
     const { from, to } = val;
     if (!from.city) {

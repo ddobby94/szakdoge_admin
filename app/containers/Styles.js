@@ -62,6 +62,13 @@ const styles = {
     borderRadius: 5,
     backgroundColor: 'rgb(65, 173, 221)',
   },
+  datePickerComponents: {
+    display: 'flex',
+    flexDirecton: 'row',
+    justifyContent: 'space-around',
+    marginTop: '20px',
+    marginBottom: '20px',
+  },
 };
 
 export default styles;
