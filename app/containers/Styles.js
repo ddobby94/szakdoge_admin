@@ -9,6 +9,7 @@ const styles = {
     widht: '100%',
     height: '50px',
     marginBottom: '20px',
+    paddingBottom: '60px',
     display: "flex",
     flexDirection: 'row',
     justifyContent: 'space-around',

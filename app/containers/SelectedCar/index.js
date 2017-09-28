@@ -9,7 +9,6 @@ import { loadSelectedCar, editCarDatas } from './actions';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 import CenteredSection from '../HomePage/CenteredSection';
-import { loadCars } from '../App/actions';
 import { selectLoading, selectCarDetails, selectError, selectAllRoutes } from './selectors';
 import { setData } from '../../utils/RoutesData'
 import s from '../Styles';
@@ -62,8 +61,6 @@ class SelectedCar extends React.PureComponent {
 
   getBasicDatas() {
     const { selectedCarDetails } = this.state;
-    console.log(selectedCarDetails);
-    console.log('.-.-.-.-.-.-.-.-.-.-.-.-.-.')
     return (
       <div style={basicDataContainer}>
         <div style={s.lineComponent}>
@@ -91,15 +88,6 @@ class SelectedCar extends React.PureComponent {
             disabled={!this.state.editDatas}
             value={selectedCarDetails.cylinder_capacity}
             onChange={(event) => this.setState({ selectedCarDetails: { ...selectedCarDetails, cylinder_capacity: event.target.value }})}
-          />
-        </div>
-        <div style={s.lineComponent}>
-          <H2>ID:</H2>
-          <input
-            type="text" style={this.getInputStyle()}
-            disabled={!this.state.editDatas}
-            value={selectedCarDetails.id}
-            onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, id: event.target.value }})}
           />
         </div>
         <div style={s.lineComponent}>
@@ -263,7 +251,7 @@ class SelectedCar extends React.PureComponent {
         routes_id,
     }
    this.props.editCarDatas(this.state.carId, data);
-   this.setState({ editDatas: false});
+   this.setState({ editDatas: false });
   }
 
   getInputStyle() {
@@ -285,23 +273,16 @@ class SelectedCar extends React.PureComponent {
 
   getRoutesTable(){
     const { location, allRoutes } = this.props;
-    console.log('ALL ROUTES', allRoutes)
     if (allRoutes) {
       const start = moment(this.state.startDate).unix() * 1000;
       const end = moment(this.state.endDate).unix() * 1000;
       let filteredRoutes = allRoutes;
       let startIsSmallerThanEnd = true;
-      console.log(end, 'END......START ', start)
       if (start !== end && start < end) {
-        console.log(filteredRoutes, 'BEFORE FILTERD')
         filteredRoutes = allRoutes.filter( v => {
-          console.log(v)
-          console.log(v.date)
           let d = new Date(v.date).getTime()
-          console.log(d)
           return d < end && d > start
         })
-        console.log(filteredRoutes, 'FILTERD')
       } else if (start < end) {
         startIsSmallerThanEnd = false;
       }
@@ -310,6 +291,10 @@ class SelectedCar extends React.PureComponent {
       return (
         <div>
           { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
+          <div style={s.datePickerComponents}>
+            <h4>START</h4>
+            <h4>END</h4>
+          </div>
           <div style={s.datePickerComponents}>
             <DatePicker
               selected={this.state.startDate}
@@ -350,7 +335,8 @@ class SelectedCar extends React.PureComponent {
                 style={s.clickAbleHeaderLine}
                 onClick={() => {this.setState({showBasicDatas: !showBasicDatas})}}
               >
-                <h4>Autó adatai</h4>
+                <h4> </h4>
+                <h4>AUTÓ ADATAI</h4>
                 <h4>{showBasicDatas? 'HIDE ME' : 'SHOW ME' }</h4>
               </div>
               {showBasicDatas && this.getBasicDatas()}
@@ -358,8 +344,9 @@ class SelectedCar extends React.PureComponent {
                 style={s.clickAbleHeaderLine}
                 onClick={() => {this.setState({showPreviousRoutes: !showPreviousRoutes})}}
               >
-               <h4>Korábbi utazások</h4>
-               <h4>{showPreviousRoutes? 'HIDE ME' : 'SHOW ME' }</h4>
+                <h4> </h4>
+                <h4>KORÁBBI UTAZÁSOK</h4>
+                <h4>{showPreviousRoutes? 'HIDE ME' : 'SHOW ME' }</h4>
               </div>
               {showPreviousRoutes && this.getRoutesTable()}
             </CenteredSection>

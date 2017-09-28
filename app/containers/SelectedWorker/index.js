@@ -3,17 +3,17 @@ import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-
-import { loadSelectedWorker } from './actions';
-import H1 from 'components/H1';
+import Button from 'components/Button'
+import { loadSelectedWorker, editSelectedWorker } from './actions';
 import H2 from 'components/H2';
 import DataTable from 'components/DataTable'
 import CenteredSection from '../HomePage/CenteredSection';
-import { loadCars } from '../App/actions';
-import { allCars,  allWorkers } from 'containers/App/selectors';
 import { selectLoading, selectWorkerDetails, selectError, selectAllRoutes } from './selectors';
 import { setData } from '../../utils/RoutesData'
 import s from '../Styles';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import 'react-datepicker/dist/react-datepicker.css';
 const contentWidthPercentage = 60;
 const contentMarginLeft = window.innerWidth * contentWidthPercentage / 300;
 
@@ -35,9 +35,12 @@ class SelectedWorker extends React.PureComponent {
       showBasicDatas: true,
       showPreviousRoutes: true,
       allRoutes: [],
+      editDatas: false,
+      startDate: moment(),
+      endDate: moment(),
     };
    
-   // this.workerSubmit = this.workerSubmit.bind(this);
+    this.workerSubmit = this.workerSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -45,55 +48,174 @@ class SelectedWorker extends React.PureComponent {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({
-      workerDetails: this.props.selectedWorkerDetails
-    });
+    if (newProps.selectedWorkerDetails) {
+      console.log('NEWPROPS GOT :', newProps.selectedWorkerDetails)
+      this.setState({
+        workerDetails: newProps.selectedWorkerDetails
+      });
+    }
   }
 
   getBasicDatas() {
-    const { selectedWorkerDetails: workerDetails } = this.props;
-
+    const { workerDetails } = this.state;
+    console.log('workerDetails :', workerDetails)
     return (
       <div style={basicDataContainer}>
         <div style={lineComponent}>
           <H2>NÉV:</H2>
-          <h3>{workerDetails.name}</h3>
-        </div>
-        <div style={lineComponent}>
-          <H2>ID:</H2>
-          <h3>{workerDetails.id}</h3>
+          <input 
+            type="text" style={this.getInputStyle()} 
+            disabled={!this.state.editDatas}
+            value={workerDetails.name}
+            onChange={(event) =>  this.setState({workerDetails: { ...workerDetails, name: event.target.value }})}
+          />
         </div>
         <div style={lineComponent}>
           <H2>TELEFONSZÁM:</H2>
-          <h3>{workerDetails.phoneNumber}</h3>
+          <input 
+            type="text" style={this.getInputStyle()} 
+            disabled={!this.state.editDatas}
+            value={workerDetails.phoneNumber}
+            onChange={(event) =>  this.setState({workerDetails: { ...workerDetails, phoneNumber: event.target.value }})}
+          />
         </div>
         <div style={lineComponent}>
           <H2>POZÍCIÓ:</H2>
-          <h3>{workerDetails.position}</h3>
+          <input 
+            type="text" style={this.getInputStyle()} 
+            disabled={!this.state.editDatas}
+            value={workerDetails.position}
+            onChange={(event) =>  this.setState({workerDetails: { ...workerDetails, position: event.target.value }})}
+          />
         </div>
         <div style={lineComponent}>
           <H2>SZÜLETÉSI IDŐ:</H2>
-          <h3>{workerDetails.dateOfBirth}</h3>
+          <input 
+            type="text" style={this.getInputStyle()} 
+            disabled={!this.state.editDatas}
+            value={workerDetails.dateOfBirth}
+            onChange={(event) =>  this.setState({workerDetails: { ...workerDetails, dateOfBirth: event.target.value }})}
+          />
         </div>
+        <Button onClick={this.workerSubmit} >
+          {this.state.editDatas? 'MENTÉS': 'ADATOK SZERKESZTÉSE'}
+        </Button>
       </div>
     );
   }
 
+  workerSubmit() {
+    if (!this.state.editDatas) {
+      this.setState({ editDatas: true });
+      return
+    }
+    const {
+      name,
+      dateOfBirth,
+      phoneNumber,
+      position,
+      email,
+      routes_id,      
+    } = this.state.workerDetails;
+    if (!name || typeof name != 'string') {
+      window.alert('Kérjük töltsd ki a telesn név mezőt!');
+      return ;
+    }
+    if (!dateOfBirth) {
+      window.alert('Kérjük töltsd ki születési dátumot!');
+      return ;
+    }
+    if (!phoneNumber ) {
+      window.alert('Kérjük töltsd ki a telefonszámot!');
+      return ;
+    }
+    if (!position || typeof position != 'string') {
+      window.alert('Kérjük töltsd ki pozíciót!');
+      return ;
+    }
+    if (!email || typeof email != 'string') {
+      window.alert('Kérjük töltsd ki az email címet!');
+      return ;
+    }
+    const data = {
+      email,
+      phoneNumber,
+      position,
+      dateOfBirth,
+      name,
+      routes_id,      
+    };
+    this.props.editSelectedWorker(this.state.workerId, data);
+    this.setState({ editDatas: false });
+  }
+
   getRoutesTable(){
     const { location, allRoutes } = this.props;
-    
     if (allRoutes) {
-      const data = setData(allRoutes)
+      const start = moment(this.state.startDate).unix() * 1000;
+      const end = moment(this.state.endDate).unix() * 1000;
+      let filteredRoutes = allRoutes;
+      let startIsSmallerThanEnd = true;
+      if (start !== end && start < end) {
+        filteredRoutes = allRoutes.filter( v => {
+          let d = new Date(v.date).getTime()
+          return d < end && d > start
+        })
+      } else if (start < end) {
+        startIsSmallerThanEnd = false;
+      }
+      const data = setData(filteredRoutes)
+
       return (
-        <DataTable data={data} mainHeaderName={'KORÁBBI UTAZÁSOK'} location={location} showDropDown={false} />
+        <div>
+          { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
+          <div style={s.datePickerComponents}>
+            <h4>START DATE</h4>
+            <h4>END DATE</h4>
+          </div>
+          <div style={s.datePickerComponents}>
+            <DatePicker
+              selected={this.state.startDate}
+              onChange={(date) => this.setState({ startDate: date })}
+            />
+            <DatePicker
+              selected={this.state.endDate}
+              onChange={(date) => this.setState({ endDate: date })}
+            />
+          </div>
+          <DataTable 
+            data={data}
+            mainHeaderName={'KORÁBBI UTAZÁSOK'}
+            location={location}
+            showDropDown={false}
+            sortByDates={true}
+          />
+        </div>
       );
     }
+  }
+
+  getInputStyle() {
+    if (this.state.editDatas) {
+      return {
+        borderWidth: '2px',
+        height: '50px',
+        marginTop: '15px',
+        fontWeight: 'normal',
+      };
+    }
+    return {
+      borderWidth: 0,
+      height: '50px',
+      marginTop: '15px',
+      fontWeight: 'bold',
+    };
   }
 
   render() {
     const { selectedWorkerDetails, loading, error } = this.props;
     const { workerDetails, showBasicDatas, showPreviousRoutes } = this.state;
-    if (!loading && selectedWorkerDetails) {
+    if (!loading && workerDetails) {
       return (
         <div>
           <Helmet
@@ -108,15 +230,17 @@ class SelectedWorker extends React.PureComponent {
                 style={s.clickAbleHeaderLine}
                 onClick={() => {this.setState({showBasicDatas: !showBasicDatas})}}
               >
-               <h4>ALKALMAZOTT adatai</h4>
-               <h4>{showBasicDatas? 'HIDE ME' : 'SHOW ME' }</h4>
+                <h4> </h4>
+                <h4>ALKALMAZOTT ADATAI</h4>
+                <h4>{showBasicDatas? 'HIDE ME' : 'SHOW ME' }</h4>
               </div>
               {showBasicDatas && this.getBasicDatas()}
               <div 
                 style={s.clickAbleHeaderLine}
                 onClick={() => {this.setState({showPreviousRoutes: !showPreviousRoutes})}}
               >
-                <h4>Korábbi utazások</h4>
+                <h4> </h4>
+                <h4>KORÁBBI UTAZÁSOK</h4>
                 <h4>{showPreviousRoutes? 'HIDE ME' : 'SHOW ME' }</h4>
               </div>
               {showPreviousRoutes && this.getRoutesTable()}
@@ -179,6 +303,7 @@ const mapStateToProps = (state) => createStructuredSelector({
 export function mapDispatchToProps(dispatch) {
   return {
     loadSelectedWorker: (id) => dispatch(loadSelectedWorker(id)),
+    editSelectedWorker: (id, data) => dispatch(editSelectedWorker(id, data)),
   };
 }
 

@@ -16,6 +16,9 @@ import {
   LOAD_WORKER,
   LOAD_WORKER_SUCCESS,
   LOAD_WORKER_FAILURE,
+  EDIT_WORKER,
+  EDIT_WORKER_SUCCESS,
+  EDIT_WORKER_FAILURE,
 } from './constants';
 
 // The initial state of the App
@@ -44,6 +47,21 @@ function appReducer(state = initialState, action) {
         .setIn('workerDetails', action.workerDetails)
         .setIn('workerAllRoutes', action.workerAllRoutes);
     case LOAD_WORKER_FAILURE:
+      return state
+        .setIn('error', action.error)
+        .set('loading', false);
+    case EDIT_WORKER:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .set('id', action.id)
+        .setIn('data', action.data);
+    case EDIT_WORKER_SUCCESS:
+      return state
+        .set('error', false)
+        .set('loading', false)
+        .setIn('workerDetails', action.workerDetails)
+    case EDIT_WORKER_FAILURE:
       return state
         .setIn('error', action.error)
         .set('loading', false);
