@@ -245,6 +245,7 @@
     "warning": "3.0.0",
     "whatwg-fetch": "2.0.1"
   },
+  // rimraf
   "devDependencies": {
     "babel-cli": "6.18.0",
     "babel-core": "6.21.0",
