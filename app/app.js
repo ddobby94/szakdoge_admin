@@ -17,6 +17,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
 import 'sanitize.css/sanitize.css';
+import * as firebase from "firebase";
 
 // Import root app
 import App from 'containers/App';
@@ -77,6 +78,16 @@ const rootRoute = {
 };
 
 const render = (messages) => {
+
+  var config = {
+    apiKey: "AIzaSyDMgFJsq1kQD1DjvJhywDyk-K1clTecBu4",
+    authDomain: "my-trips-1f14a.firebaseapp.com",
+    databaseURL: "https://my-trips-1f14a.firebaseio.com",
+    projectId: "my-trips-1f14a",
+    storageBucket: "my-trips-1f14a.appspot.com",
+    messagingSenderId: "478356909002"
+  };
+  firebase.initializeApp(config);
   ReactDOM.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>

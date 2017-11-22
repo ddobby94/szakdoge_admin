@@ -42,6 +42,11 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
       '/routes/' + id + '.json'
     )
 
+  const postShit = (comp, data) =>
+    api.put(
+      comp + '.json',
+      data,
+  )
   /*
 
   const getUser = (authData, username) =>
@@ -81,6 +86,7 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
     loadSelectedWorker,
     loadSelectedCar,
     loadRoutesById,
+    postShit,
   }
 }
 
