@@ -47,6 +47,13 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
       comp + '.json',
       data,
   )
+
+
+  const addSuperAdmin = (company, data) =>
+   api.put(
+     company + '/superAdmin.json',
+     data,
+   )
   /*
 
   const getUser = (authData, username) =>
@@ -87,6 +94,7 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
     loadSelectedCar,
     loadRoutesById,
     postShit,
+    addSuperAdmin,
   }
 }
 

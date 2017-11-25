@@ -26,7 +26,7 @@ class SelectedCar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      pass: '',
+      pass: 'asdasd',
       email: '',
     };
   }
@@ -35,19 +35,30 @@ class SelectedCar extends React.PureComponent {
     const { email, pass } = this.state;
     console.log('email: ',email,'.......', pass)
     const auth = firebase.auth();
-    const promise = auth.signInWithEmailAndPassword(email, pass).then( e => console.log(e)).catch(e => console.log('error', e));
+    const promise = auth.signInWithEmailAndPassword(email, pass).then( e => console.log(e, e.company, e.displayName)).catch(e => console.log('error', e));
     console.log('response: ', promise)
   }
 
-  postSthToDB() {
+  postSthToDB(e) {
+    console.log('post sth',e)
+    var user = firebase.auth().currentUser;
     
+    user.updateProfile({
+      displayName: "SuperAdmin",
+      photoURL: "https://example.com/jane-q-user/profile.jpg",
+      company: 'MY COMP',
+    }).then(function() {
+      console.log('UPDATE SUCCES')
+    }).catch(function(error) {
+      console.log('UPDATE ERROR')
+    });
   }
 
   register() {
     const { email, pass } = this.state;
     console.log('email: ',email, pass)
     const auth = firebase.auth();
-    const promise = auth.createUserWithEmailAndPassword(email, pass).then( e => console.log(e)).catch(e => console.log('error', e));
+    const promise = auth.createUserWithEmailAndPassword(email, pass).then( e => this.postSthToDB(e)).catch(e => console.log('error', e));
     console.log('response: ', promise)
   }
 
