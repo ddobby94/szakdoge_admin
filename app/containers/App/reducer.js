@@ -19,6 +19,11 @@ import {
   GET_ALL_CARS,
   GET_ALL_CARS_SUCCESS,
   GET_ALL_CARS_FAILURE,
+  SET_USER_TOKEN,
+  REGISTER_USER,
+  GET_USER_DATAS,
+  GET_USER_DATAS_SUCCESS,
+  GET_USER_DATAS_FAILURE,
 } from './constants';
 
 // The initial state of the App
@@ -62,6 +67,27 @@ function appReducer(state = initialState, action) {
       return state
         .setIn('error', action.error)
         .set('loading', false);
+    case SET_USER_TOKEN:
+      return state
+        .setIn('token', action.token);
+    case REGISTER_USER:
+      return state
+        .setIn('loading', true)
+    case GET_USER_DATAS: 
+    return state
+      .set('loading', true)
+      .set('error', false)
+      .setIn('user', null);
+    case GET_USER_DATAS_SUCCESS: 
+    return state
+      .set('loading', false)
+      .set('error', false)
+      .setIn('user', action.user);
+    case GET_USER_DATAS_FAILURE: 
+    return state
+      .set('loading', false)
+      .set('error', true)
+      .setIn('user', null);
     default:
       return state;
   }

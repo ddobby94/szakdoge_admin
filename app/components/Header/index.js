@@ -14,7 +14,7 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
       <div>
         {/*<Img src={CarPhoto} alt="react-boilerplate - Logo" />*/}
         <NavBar>
-          <HeaderLink to="/">
+          <HeaderLink to="/workers">
             <FormattedMessage {...messages.home} />
           </HeaderLink>
           <HeaderLink to="/cars">

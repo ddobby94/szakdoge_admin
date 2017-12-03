@@ -22,6 +22,11 @@ import {
   GET_ALL_CARS,
   GET_ALL_CARS_SUCCESS,
   GET_ALL_CARS_FAILURE,
+  SET_USER_TOKEN,
+  REGISTER_USER,
+  GET_USER_DATAS,
+  GET_USER_DATAS_SUCCESS,
+  GET_USER_DATAS_FAILURE,
 } from './constants';
 
 export function loadWorkersData() {
@@ -63,3 +68,28 @@ export function loadCarsFailure(error) {
     error,
   };
 }
+
+export const setUserToken = (token) => ({
+  type: SET_USER_TOKEN,
+  token,
+})
+
+export const registerUser = (uid) => ({
+  type: REGISTER_USER,
+  uid,
+})
+
+export const getUserData = (uid) => ({
+  type: GET_USER_DATAS,
+  uid,
+})
+
+export const getUserDataSuccess = (user) => ({
+  type: GET_USER_DATAS_SUCCESS,
+  user,
+})
+
+export const getUserDataError = (error) => ({
+  type: GET_USER_DATAS_FAILURE,
+  error,
+})

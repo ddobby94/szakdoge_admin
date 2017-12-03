@@ -10,24 +10,45 @@ import H2 from 'components/H2';
 import CenteredSection from '../HomePage/CenteredSection';
 import s from '../Styles';
 import * as firebase from "firebase";
-
+import { setUserToken, getUserData } from '../App/actions';
+import { getToken, getUser } from '../App/selectors';
+import API from '../../Api'
+const realApi = API.create()
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 
 const contentWidthPercentage = 60;
 const contentMarginLeft = window.innerWidth * contentWidthPercentage / 300;
 
-const basicDataContainer ={
+const basicDataContainer = {
   width: contentWidthPercentage + '%',
   marginLeft: contentMarginLeft + 'px',
 };
+
+async function postSth(data) {
+  console.log('I AM CALLED! ')
+  // https://us-central1-my-trips-1f14a.cloudfunctions.net/addExtraTokens
+  const url = 'https://us-central1-my-trips-1f14a.cloudfunctions.net/setUserData';
+  const fetch = window.fetch.bind(window);
+  const response = await fetch(url, {
+    method: 'POST',
+    protocol: 'http:',
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+      'Access-Control-Allow-Origin:': 'https://us-central1-my-trips-1f14a.cloudfunctions.net',
+    },
+    body: data,
+  });
+  console.log('RESPONSE: ', response);
+}
 
 class SelectedCar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       pass: 'asdasd',
-      email: '',
+      email: 'teszt@teszt.hu',
     };
   }
 
@@ -35,23 +56,36 @@ class SelectedCar extends React.PureComponent {
     const { email, pass } = this.state;
     console.log('email: ',email,'.......', pass)
     const auth = firebase.auth();
-    const promise = auth.signInWithEmailAndPassword(email, pass).then( e => console.log(e, e.company, e.displayName)).catch(e => console.log('error', e));
+    const promise = auth.signInWithEmailAndPassword(email, pass).then( e => this.sigInSuccess(e)).catch(e => console.log('error', e));
     console.log('response: ', promise)
   }
 
+  sigInSuccess(e) {
+    // const user = firebase.auth().currentUser;
+    // const token = user.getIdToken(true).then( token => console.log('REFRESH:', token))
+    // console.log(e);
+    console.log('uid', e.uid);
+    // console.log('USER', token);
+    // console.log('USER', user.company);
+    this.props.getUserData(e.uid);
+  }
+
   postSthToDB(e) {
-    console.log('post sth',e)
-    var user = firebase.auth().currentUser;
-    
-    user.updateProfile({
-      displayName: "SuperAdmin",
-      photoURL: "https://example.com/jane-q-user/profile.jpg",
-      company: 'MY COMP',
-    }).then(function() {
-      console.log('UPDATE SUCCES')
-    }).catch(function(error) {
-      console.log('UPDATE ERROR')
-    });
+    const auth = firebase.auth();
+    console.log('post sth', e.uid)
+    var uid = e.uid;
+    var additionalClaims = {
+      superAdmin: true,
+      admin: true,
+      company: 'superCompany',
+    };
+    const data = {
+      uid,
+      ...additionalClaims,
+    };
+    console.log('DATA: ', data)
+    postSth(data);
+
   }
 
   register() {
@@ -63,6 +97,7 @@ class SelectedCar extends React.PureComponent {
   }
 
   logout() {
+    console.log('HEYY', this.props.user);
     firebase.auth().signOut();
   }
 
@@ -78,34 +113,34 @@ class SelectedCar extends React.PureComponent {
   }
 
   render() {
-
-      return (
+    console.log(this.props.token)
+    return (
+      <div>
+        <Helmet
+          title="LOGIN"
+          meta={[
+            { name: 'description', content: 'Útnyílvántartó admin felület' },
+          ]}
+        />
         <div>
-          <Helmet
-            title="LOGIN"
-            meta={[
-              { name: 'description', content: 'Útnyílvántartó admin felület' },
-            ]}
-          />
-          <div>
-            <CenteredSection>
-              <H2>EMAIL</H2>
-              <input 
-                type="text" value={this.state.email} style={s.inputStyle}
-                onChange={(e) => this.setState({ email: e.target.value })} 
-              />
-              <H2>JELSZÓ</H2>
-              <input 
-                type="text" value={this.state.pass} style={s.inputStyle}
-                onChange={(e) => this.setState({ pass: e.target.value })} 
-              />
-              <div style={s.submitButton} onClick={() => this.signIn()}> BEJELENTKEZÉS </div>
-              <div style={s.submitButton} onClick={() => this.register()}> SIGN UP </div>
-              <div style={s.submitButton} onClick={() => this.logout()}> LOGOUT </div>
-            </CenteredSection>
-          </div>
+          <CenteredSection>
+            <H2>EMAIL</H2>
+            <input 
+              type="text" value={this.state.email} style={s.inputStyle}
+              onChange={(e) => this.setState({ email: e.target.value })} 
+            />
+            <H2>JELSZÓ</H2>
+            <input 
+              type="text" value={this.state.pass} style={s.inputStyle}
+              onChange={(e) => this.setState({ pass: e.target.value })} 
+            />
+            <div style={s.submitButton} onClick={() => this.signIn()}> BEJELENTKEZÉS </div>
+            <div style={s.submitButton} onClick={() => this.register()}> SIGN UP </div>
+            <div style={s.submitButton} onClick={() => this.logout()}> LOGOUT </div>
+          </CenteredSection>
         </div>
-      );
+      </div>
+    );
   }
 }
 
@@ -116,11 +151,14 @@ SelectedCar.propTypes = {
 };
 
 const mapStateToProps = (state) => createStructuredSelector({
-
+  token: getToken(),
+  user: getUser(),
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
+    setUserToken: (token) => dispatch(setUserToken(token)),
+    getUserData: (uid) => dispatch(getUserData(uid)),
   };
 }
 

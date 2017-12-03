@@ -31,6 +31,16 @@ const allCars = () => createSelector(
   (globalState) => globalState.getIn('cars')
 );
 
+const getToken = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn('token')
+);
+
+const getUser = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn('user')
+);
+
 const makeSelectLocationState = () => {
   let prevRoutingState;
   let prevRoutingStateJS;
@@ -55,4 +65,6 @@ export {
   makeSelectLocationState,
   allWorkers,
   allCars,
+  getToken,
+  getUser,
 };

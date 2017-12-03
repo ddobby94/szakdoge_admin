@@ -1,13 +1,27 @@
 // a library to wrap and simplify api calls
 import apisauce from 'apisauce'
 
+// https://us-central1-my-trips-1f14a.cloudfunctions.net/addExtraTokens
+
 const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
 
   const api = apisauce.create({
     baseURL,
     headers: {
       'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache'
+      'Cache-Control': 'no-cache',
+      'Access-Control-Allow-Origin': 'http://localhost:3000/',
+    },
+    timeout: 30000,
+  })
+
+  const cloudFunctions = apisauce.create({
+    // baseURL: 'https://us-central1-my-trips-1f14a.cloudfunctions.net',
+    baseURL: 'http://localhost:5000/my-trips-1f14a/us-central1/',
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+      'Access-Control-Allow-Origin': 'http://localhost:3000/',
     },
     timeout: 30000,
   })
@@ -50,10 +64,24 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
 
 
   const addSuperAdmin = (company, data) =>
-   api.put(
-     company + '/superAdmin.json',
-     data,
-   )
+    api.put(
+      company + '/superAdmin.json',
+      data,
+  )
+
+  const addUserData = (uid) =>
+    cloudFunctions.post(
+      '/getSignedInUserData',
+      uid,
+    )
+
+
+  const getUserData = (uid) =>
+    cloudFunctions.post(
+      '/getSignedInUserData',
+      uid,
+    )
+
   /*
 
   const getUser = (authData, username) =>
@@ -95,6 +123,8 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
     loadRoutesById,
     postShit,
     addSuperAdmin,
+    addUserData,
+    getUserData,
   }
 }
 
