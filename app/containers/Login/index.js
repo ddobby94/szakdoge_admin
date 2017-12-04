@@ -25,24 +25,6 @@ const basicDataContainer = {
   marginLeft: contentMarginLeft + 'px',
 };
 
-async function postSth(data) {
-  console.log('I AM CALLED! ')
-  // https://us-central1-my-trips-1f14a.cloudfunctions.net/addExtraTokens
-  const url = 'https://us-central1-my-trips-1f14a.cloudfunctions.net/setUserData';
-  const fetch = window.fetch.bind(window);
-  const response = await fetch(url, {
-    method: 'POST',
-    protocol: 'http:',
-    headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache',
-      'Access-Control-Allow-Origin:': 'https://us-central1-my-trips-1f14a.cloudfunctions.net',
-    },
-    body: data,
-  });
-  console.log('RESPONSE: ', response);
-}
-
 class SelectedCar extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -71,21 +53,8 @@ class SelectedCar extends React.PureComponent {
   }
 
   postSthToDB(e) {
-    const auth = firebase.auth();
     console.log('post sth', e.uid)
-    var uid = e.uid;
-    var additionalClaims = {
-      superAdmin: true,
-      admin: true,
-      company: 'superCompany',
-    };
-    const data = {
-      uid,
-      ...additionalClaims,
-    };
     console.log('DATA: ', data)
-    postSth(data);
-
   }
 
   register() {
@@ -131,12 +100,12 @@ class SelectedCar extends React.PureComponent {
             />
             <H2>JELSZÓ</H2>
             <input 
-              type="text" value={this.state.pass} style={s.inputStyle}
+              type="password" value={this.state.pass} style={s.inputStyle}
               onChange={(e) => this.setState({ pass: e.target.value })} 
             />
             <div style={s.submitButton} onClick={() => this.signIn()}> BEJELENTKEZÉS </div>
-            <div style={s.submitButton} onClick={() => this.register()}> SIGN UP </div>
-            <div style={s.submitButton} onClick={() => this.logout()}> LOGOUT </div>
+            {/* <div style={s.submitButton} onClick={() => this.register()}> SIGN UP </div>
+            <div style={s.submitButton} onClick={() => this.logout()}> LOGOUT </div> */}
           </CenteredSection>
         </div>
       </div>

@@ -15,10 +15,11 @@ import request from 'utils/request';
 export function* getUserDatas(action) {
   const { uid } = action
   try {
+    console.log('UID to send', uid)
     const response = yield call(realApi.getUserData, uid)
     console.log('RESP', response)
     if (response.ok) {
-        yield put(getUserDataSuccess(response));
+        yield put(getUserDataSuccess({ ...response.data, uid }));
     } else {
         throw response;
     }
