@@ -26,6 +26,8 @@ export function App(props) {
   console.log('currentloc', currentLoc)
   if (!user && props.router && currentLoc.pathname !== '/') {
     props.router.push('/');
+  } else if (user === 'user') {
+    props.router.push('/');
   }
   return (
     <AppWrapper>
@@ -36,7 +38,7 @@ export function App(props) {
           { name: 'description', content: 'A React.js Boilerplate application' },
         ]}
       />
-      {user && <Header />}
+      {user && <Header user={user} />}
       {React.Children.toArray(props.children)}
       {user && <Footer />}
     </AppWrapper>

@@ -11,7 +11,7 @@ import CenteredSection from '../HomePage/CenteredSection';
 import s from '../Styles';
 import * as firebase from "firebase";
 import { setUserToken, getUserData } from '../App/actions';
-import { getToken, getUser } from '../App/selectors';
+import { getToken, getUser, error } from '../App/selectors';
 import API from '../../Api'
 const realApi = API.create()
 
@@ -25,36 +25,43 @@ const basicDataContainer = {
   marginLeft: contentMarginLeft + 'px',
 };
 
+const roles = {
+  admin: true,
+  superAdmin: true,
+  owner: true,
+}
+
 class SelectedCar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      pass: 'asdasd',
-      email: 'teszt@teszt.hu',
+      pass: 'superSecret123',
+      email: 'dobisz_david@windowslive.com',
+      signInError: '',
+      clickAble: true,
     };
   }
 
+  componentWillReceiveProps({ user }) {
+    console.log('user', user);
+    if (user && roles[user.role]) {
+      this.props.router.push('/workers');
+    }
+  }
+
   signIn() {
-    const { email, pass } = this.state;
-    console.log('email: ',email,'.......', pass)
+    const { email, pass, clickAble } = this.state;
+    if (!clickAble) {
+      return
+    }
+    this.setState({ clickAble: false });
     const auth = firebase.auth();
-    const promise = auth.signInWithEmailAndPassword(email, pass).then( e => this.sigInSuccess(e)).catch(e => console.log('error', e));
-    console.log('response: ', promise)
-  }
-
-  sigInSuccess(e) {
-    // const user = firebase.auth().currentUser;
-    // const token = user.getIdToken(true).then( token => console.log('REFRESH:', token))
-    // console.log(e);
-    console.log('uid', e.uid);
-    // console.log('USER', token);
-    // console.log('USER', user.company);
-    this.props.getUserData(e.uid);
-  }
-
-  postSthToDB(e) {
-    console.log('post sth', e.uid)
-    console.log('DATA: ', data)
+    const promise = auth.signInWithEmailAndPassword(email, pass)
+    .then( e => {
+      this.props.getUserData(e.uid)
+      this.setState({ signInError: '', clickAble: true });
+    })
+    .catch(e => this.setState({ signInError: e.message, clickAble: true }));
   }
 
   register() {
@@ -82,7 +89,7 @@ class SelectedCar extends React.PureComponent {
   }
 
   render() {
-    console.log(this.props.token)
+    const { signInError } = this.state;
     return (
       <div>
         <Helmet
@@ -104,8 +111,7 @@ class SelectedCar extends React.PureComponent {
               onChange={(e) => this.setState({ pass: e.target.value })} 
             />
             <div style={s.submitButton} onClick={() => this.signIn()}> BEJELENTKEZÉS </div>
-            {/* <div style={s.submitButton} onClick={() => this.register()}> SIGN UP </div>
-            <div style={s.submitButton} onClick={() => this.logout()}> LOGOUT </div> */}
+            <h3 style={s.errorMsg}>{signInError}</h3>
           </CenteredSection>
         </div>
       </div>

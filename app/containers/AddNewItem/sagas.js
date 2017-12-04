@@ -14,6 +14,7 @@ import request from 'utils/request';
 
 export function* addNewCar(action) {
   const { id, data } = action
+  
   try {
     // const response = yield call(api.addPartnerContacts, authData, contacts, deletedContacts)
     const response = yield call(realApi.addNewCar, id, data);
@@ -25,11 +26,14 @@ export function* addNewCar(action) {
 
 
 export function* addNewWorker(action) {
-    const { id, data } = action
+    const { data } = action
     try {
-      // const response = yield call(api.addPartnerContacts, authData, contacts, deletedContacts)
-      const response = yield call(realApi.addNewWorker, id, data);
-      yield put(postNewWorkerSuccess(response));
+        const response = yield call(realApi.setUserData, data);
+        if (response.ok) {
+          yield put(postNewWorkerSuccess(response));
+        } else {
+          throw response;
+        }
     } catch (err) {
       yield put(postNewWorkerFailure(err));
     }

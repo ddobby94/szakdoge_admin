@@ -30,10 +30,9 @@ import {
     };
   }
   
-  export function postNewWorker(id, data) {
+  export function postNewWorker(data) {
     return {
       type: POST_NEW_WORKER,
-      id,
       data,
     };
   }

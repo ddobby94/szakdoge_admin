@@ -41,6 +41,11 @@ const getUser = () => createSelector(
   (globalState) => globalState.getIn('user')
 );
 
+const getError = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn('error')
+);
+
 const makeSelectLocationState = () => {
   let prevRoutingState;
   let prevRoutingStateJS;

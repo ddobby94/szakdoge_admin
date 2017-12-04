@@ -70,6 +70,14 @@ const styles = {
     marginTop: '20px',
     marginBottom: '20px',
   },
+  errorMsg: {
+    fontSize: 20,
+    height: '70px',
+    marginTop: '20px',
+    paddingTop: '20px',
+    borderRadius: 5,
+    color: 'rgb(150, 10, 10)',
+  }
 };
 
 export default styles;

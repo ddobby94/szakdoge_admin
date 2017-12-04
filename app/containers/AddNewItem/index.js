@@ -10,6 +10,10 @@ import { loadCars } from '../App/actions';
 import { allCars,  allWorkers } from 'containers/App/selectors';
 import { selectLoading, selectResponse, selectError } from './selectors';
 import s from '../Styles';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
+import { getUser } from '../App/selectors';
+import * as firebase from "firebase";
 
 
 class NewItemPage extends React.PureComponent {
@@ -23,6 +27,8 @@ class NewItemPage extends React.PureComponent {
       loadedRoutes: props.location && [props.location.pathname],
       newCarPage: isItCarsPage,
       length: isItCarsPage? carsLength : workersLength,
+      role: 'user',
+      company: '',
     };
     this.carSubmit = this.carSubmit.bind(this);
     this.setLicencePlate = this.setLicencePlate.bind(this);
@@ -159,24 +165,47 @@ class NewItemPage extends React.PureComponent {
   }
 
   renderWorkerForm() {
+    const { role, company } = this.props.user;
+    const roleBasedOptions = {
+      admin: [{ value: 'user', label: 'User' }],
+      superAdmin: [
+        { value: 'user', label: 'User' },
+        { value: 'admin', label: 'Admin' },
+      ],
+      owner: [
+        { value: 'user', label: 'User' },
+        { value: 'admin', label: 'Admin' },
+        { value: 'superAdmin', label: 'Szuper admin' },
+      ],
+    }
+    if ( role !== 'owner') {
+      this.setState({ company })
+    }
     return(
       <div style={s.divLineStyleColumn}>
         <form onSubmit={this.workerSubmit}>
+            <H2>JOGOSULTSÁG</H2>
+            <Select options={roleBasedOptions[role]} 
+              onChange={val => this.setState({ role: val })}
+              value={this.state.role} placeholder="Select an option"
+            />
             <H2>TELJES NÉV</H2>
             <input type="text" value={this.state.name} style={s.inputStyle}
              onChange={(event) => this.setState({name: event.target.value})} />
-            <H2>SZÜLETÉSI DÁTUM</H2>
-            <input type="text" value={this.state.dateOfBirth} style={s.inputStyle}
-            onChange={(event) => this.setState({dateOfBirth: event.target.value})} />
+             <H2>CÉG</H2>
+            {role === 'owner' ? <input type="text" value={this.state.company} style={s.inputStyle}
+             onChange={(event) => this.setState({company: event.target.value})} />
+             : <h3>{company}</h3>
+            }
             <H2>TELEFONSZÁM</H2>
             <input type="text" value={this.state.phoneNumber} style={s.inputStyle}
              onChange={(event) => this.setState({phoneNumber: event.target.value})} />
-            <H2>POZÍCIÓ</H2>
-            <input type="text" value={this.state.position} style={s.inputStyle}
-             onChange={(event) => this.setState({position: event.target.value})} />
             <H2>EMAIL CÍM</H2>
             <input type="text" value={this.state.email} style={s.inputStyle}
              onChange={(event) => this.setState({email: event.target.value})} />
+             <H2>JELSZÓ</H2>
+            <input type="text" value={this.state.password} style={s.inputStyle}
+             onChange={(event) => this.setState({password: event.target.value})} />
             <div style={s.submitButton} onClick={this.workerSubmit}> MENTÉS </div>
         </form>
       </div>
@@ -184,42 +213,47 @@ class NewItemPage extends React.PureComponent {
   }
 
   workerSubmit() {
+    const { user } = this.props;
     const {
       name,
-      dateOfBirth,
+      company,
       phoneNumber,
-      position,
+      password,
       email,
     } = this.state;
     if (!name || typeof name != 'string') {
       window.alert('Kérjük töltsd ki a telesn név mezőt!');
       return ;
     }
-    if (!dateOfBirth) {
-      window.alert('Kérjük töltsd ki születési dátumot!');
-      return ;
-    }
     if (!phoneNumber ) {
       window.alert('Kérjük töltsd ki a telefonszámot!');
-      return ;
-    }
-    if (!position || typeof position != 'string') {
-      window.alert('Kérjük töltsd ki pozíciót!');
       return ;
     }
     if (!email || typeof email != 'string') {
       window.alert('Kérjük töltsd ki az email címet!');
       return ;
     }
-    const data = {
-      email,
-      phoneNumber,
-      position,
-      dateOfBirth,
-      name,
-      id: this.state.length,
+    if (!company || typeof company != 'string') {
+      window.alert('Kérjük töltsd ki a cég nevét!');
+      return ;
     }
-    this.props.postNewWorker(this.state.length, data)
+    if (!password || typeof password != 'string') {
+      window.alert('Kérjük töltsd ki az jelszót!');
+      return ;
+    }
+    let data = {
+      uid: user.uid,
+      phoneNumber,
+      company,
+      name,
+    }
+    const auth = firebase.auth();
+    const promise = auth.createUserWithEmailAndPassword(email, password)
+    .then( e => {
+      data.targetUid = e.uid;
+      this.props.postNewWorker(data)
+    })
+    .catch( e => alert(e.message));
   }
 
   render() {    
@@ -298,12 +332,13 @@ const mapStateToProps = (state) => createStructuredSelector({
     loading: selectLoading(),
     response: selectResponse(),
     error: selectError(),
+    user: getUser(),
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
     postNewCar: (id, data) => dispatch(postNewCar(id, data)),
-    postNewWorker: (id, data) => dispatch(postNewWorker(id, data)),
+    postNewWorker: (data) => dispatch(postNewWorker(data)),
   };
 }
 

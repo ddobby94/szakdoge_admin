@@ -73,10 +73,10 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
       data,
   )
 
-  const addUserData = (uid) =>
+  const setUserData = (data) =>
     cloudFunctions.post(
-      '/getSignedInUserData',
-      uid,
+      '/setUserData',
+      data,
     )
 
 
@@ -84,7 +84,7 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
     cloudFunctions.post(
       '/getSignedInUserData',
       { uid },
-    )
+    ) 
 
   /*
 
@@ -111,7 +111,7 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
     loadRoutesById,
     postShit,
     addSuperAdmin,
-    addUserData,
+    setUserData,
     getUserData,
   }
 }
