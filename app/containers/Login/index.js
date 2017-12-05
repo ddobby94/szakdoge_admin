@@ -10,7 +10,7 @@ import H2 from 'components/H2';
 import CenteredSection from '../HomePage/CenteredSection';
 import s from '../Styles';
 import * as firebase from "firebase";
-import { setUserToken, getUserData } from '../App/actions';
+import { setUserToken, getUserData, getCompanyData } from '../App/actions';
 import { getToken, getUser, error } from '../App/selectors';
 import API from '../../Api'
 const realApi = API.create()
@@ -45,6 +45,7 @@ class SelectedCar extends React.PureComponent {
   componentWillReceiveProps({ user }) {
     console.log('user', user);
     if (user && roles[user.role]) {
+      this.props.getCompanyData(user.uid);
       this.props.router.push('/workers');
     }
   }
@@ -134,6 +135,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     setUserToken: (token) => dispatch(setUserToken(token)),
     getUserData: (uid) => dispatch(getUserData(uid)),
+    getCompanyData: (uid) => dispatch(getCompanyData(uid)),
   };
 }
 

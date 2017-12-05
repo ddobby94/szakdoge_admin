@@ -27,6 +27,9 @@ import {
   GET_USER_DATAS,
   GET_USER_DATAS_SUCCESS,
   GET_USER_DATAS_FAILURE,
+  GET_COMPANY_DATA,
+  GET_COMPANY_DATA_SUCCESS,
+  GET_COMPANY_DATA_ERROR,
 } from './constants';
 
 export function loadWorkersData() {
@@ -91,5 +94,20 @@ export const getUserDataSuccess = (user) => ({
 
 export const getUserDataError = (error) => ({
   type: GET_USER_DATAS_FAILURE,
+  error,
+})
+
+export const getCompanyData = (uid) => ({
+  type: GET_COMPANY_DATA,
+  uid
+})
+
+export const getCompanyDataSuccess = (companyData) => ({
+  type: GET_COMPANY_DATA_SUCCESS,
+  companyData,
+})
+
+export const getCompanyDataError = (error) => ({
+  type: GET_COMPANY_DATA_ERROR,
   error,
 })

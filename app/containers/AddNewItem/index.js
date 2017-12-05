@@ -29,6 +29,7 @@ class NewItemPage extends React.PureComponent {
       length: isItCarsPage? carsLength : workersLength,
       role: 'user',
       company: '',
+      alertShown: false,
     };
     this.carSubmit = this.carSubmit.bind(this);
     this.setLicencePlate = this.setLicencePlate.bind(this);
@@ -149,6 +150,7 @@ class NewItemPage extends React.PureComponent {
       return ;
     }
 
+    this.setState({ alertShown: false });
     const data = {
         cylinder_capacity,
         own_weight_kg,
@@ -220,6 +222,7 @@ class NewItemPage extends React.PureComponent {
       phoneNumber,
       password,
       email,
+      role,
     } = this.state;
     if (!name || typeof name != 'string') {
       window.alert('Kérjük töltsd ki a telesn név mezőt!');
@@ -241,11 +244,14 @@ class NewItemPage extends React.PureComponent {
       window.alert('Kérjük töltsd ki az jelszót!');
       return ;
     }
+    this.setState({ alertShown: false });
     let data = {
       uid: user.uid,
       phoneNumber,
       company,
       name,
+      role: role.value,
+      email,
     }
     const auth = firebase.auth();
     const promise = auth.createUserWithEmailAndPassword(email, password)
@@ -258,10 +264,12 @@ class NewItemPage extends React.PureComponent {
 
   render() {    
     const { response, loading, error } = this.props;
-    if (response && response.ok && !loading) {
+    if (response && response.ok && !loading && !this.state.alertShown) {
+      this.setState({ alertShown: true });
       window.alert(' Az adatokat sikeresen elmentettük! ');
     }
-    if (response && (!response.ok || error)) {
+    if (response && (!response.ok || error)  && !this.state.alertShown) {
+      this.setState({ alertShown: true });
       window.alert('Hiba történt!');
     }
     if (true) {

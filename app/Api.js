@@ -86,8 +86,14 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
       { uid },
     ) 
 
-  /*
+  const getCompanyData = (uid) =>
+    cloudFunctions.post(
+      '/getCompanyData',
+      { uid },
+    ) 
 
+  /*
+getCompanyData
   const getUser = (authData, username) =>
     api.get(
       '/api/users/show/' + username,
@@ -113,6 +119,7 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
     addSuperAdmin,
     setUserData,
     getUserData,
+    getCompanyData,
   }
 }
 

@@ -24,6 +24,9 @@ import {
   GET_USER_DATAS,
   GET_USER_DATAS_SUCCESS,
   GET_USER_DATAS_FAILURE,
+  GET_COMPANY_DATA,
+  GET_COMPANY_DATA_SUCCESS,
+  GET_COMPANY_DATA_ERROR,
 } from './constants';
 
 // The initial state of the App
@@ -74,20 +77,35 @@ function appReducer(state = initialState, action) {
       return state
         .setIn('loading', true)
     case GET_USER_DATAS: 
-    return state
-      .set('loading', true)
-      .set('error', false)
-      .setIn('user', null);
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .setIn('user', null);
     case GET_USER_DATAS_SUCCESS: 
-    return state
-      .set('loading', false)
-      .set('error', false)
-      .setIn('user', action.user);
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .setIn('user', action.user);
     case GET_USER_DATAS_FAILURE: 
-    return state
-      .set('loading', false)
-      .set('error', true)
-      .setIn('user', null);
+      return state
+        .set('loading', false)
+        .set('error', true)
+        .setIn('user', null);
+    case GET_COMPANY_DATA:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .setIn('companyData', null);
+    case GET_COMPANY_DATA_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .setIn('companyData', action.companyData);
+    case GET_COMPANY_DATA_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .setIn('companyData', null);
     default:
       return state;
   }
