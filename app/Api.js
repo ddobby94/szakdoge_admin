@@ -18,8 +18,8 @@ const create = (baseURL = 'https://my-trips-1f14a.firebaseio.com') => {
   })
 
   const cloudFunctions = apisauce.create({
-    // baseURL: 'https://us-central1-my-trips-1f14a.cloudfunctions.net',
-    baseURL: 'http://localhost:5000/my-trips-1f14a/us-central1/',
+    baseURL: 'https://us-central1-my-trips-1f14a.cloudfunctions.net',
+    // baseURL: 'http://localhost:5000/my-trips-1f14a/us-central1/',
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache',
