@@ -30,6 +30,10 @@ import {
   GET_COMPANY_DATA,
   GET_COMPANY_DATA_SUCCESS,
   GET_COMPANY_DATA_ERROR,
+  NEW_CAR_ADDED,
+  NEW_WORKER_ADDED,
+  CARS_LOADED,
+  WORKERS_LOADED,
 } from './constants';
 
 export function loadWorkersData() {
@@ -111,3 +115,24 @@ export const getCompanyDataError = (error) => ({
   type: GET_COMPANY_DATA_ERROR,
   error,
 })
+
+export const newCarAdded = (newCar) => ({
+  type: NEW_CAR_ADDED,
+  newCar,
+})
+
+export const newWorkerAdded = (newWorker) => ({
+  type: NEW_WORKER_ADDED,
+  newWorker,
+})
+
+export const carsLoaded = (cars) => ({
+  type: CARS_LOADED,
+  cars,
+})
+
+export const workersLoaded = (workers) => ({
+  type: WORKERS_LOADED,
+  workers,
+})
+

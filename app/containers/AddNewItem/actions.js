@@ -8,9 +8,10 @@ import {
     POST_NEW_WORKER,
   } from './constants';
   
-  export function postNewCar(id, data) {
+  export function postNewCar(company, id, data) {
     return {
       type: POST_NEW_CAR,
+      company,
       id,
       data,
     };

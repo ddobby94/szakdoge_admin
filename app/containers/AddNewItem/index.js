@@ -7,7 +7,7 @@ import { postNewCar, postNewWorker } from './actions';
 import H2 from 'components/H2';
 import CenteredSection from '../HomePage/CenteredSection';
 import { loadCars } from '../App/actions';
-import { allCars,  allWorkers } from 'containers/App/selectors';
+import { allCars,  allWorkers, getOwnCompanyData } from '../App/selectors';
 import { selectLoading, selectResponse, selectError } from './selectors';
 import s from '../Styles';
 import Select from 'react-select';
@@ -20,13 +20,10 @@ class NewItemPage extends React.PureComponent {
   constructor(props) {
     super(props);
     const isItCarsPage = props.location.query.new === 'car'
-    let carsLength = props.cars ? props.cars.length : 3
-    let workersLength = props.workers? props.workers.length : 4 // BIG FCKN TODO
     this.state = {
       progress: -1,
       loadedRoutes: props.location && [props.location.pathname],
       newCarPage: isItCarsPage,
-      length: isItCarsPage? carsLength : workersLength,
       role: 'user',
       company: '',
       alertShown: false,
@@ -44,27 +41,34 @@ class NewItemPage extends React.PureComponent {
     return(
       <div style={s.divLineStyleColumn}>
         <form onSubmit={this.carSubmit}>
-            <H2>HENGERŰRTARTALOM (köbcenti)</H2>
-            <input type="text" value={this.state.cylinder_capacity} style={s.inputStyle}
-             onChange={(event) => this.setState({cylinder_capacity: event.target.value})} />
-            <H2>AUTÓ SAJÁT TÖMEGE (kg)</H2>
-            <input type="text" value={this.state.own_weight_kg} style={s.inputStyle}
-            onChange={(event) => this.setState({own_weight_kg: event.target.value})} />
             <H2>MÁRKANÉV</H2>
             <input type="text" value={this.state.brand} style={s.inputStyle}
              onChange={(event) => this.setState({brand: event.target.value})} />
             <H2>TÍPUS</H2>
             <input type="text" value={this.state.type} style={s.inputStyle}
              onChange={(event) => this.setState({type: event.target.value})} />
+            <H2>HENGERŰRTARTALOM (köbcenti)</H2>
+            <input type="text" value={this.state.cylinder_capacity} style={s.inputStyle}
+             onChange={(event) => this.setState({cylinder_capacity: event.target.value})} />
+            <H2>AUTÓ SAJÁT TÖMEGE (kg)</H2>
+            <input type="text" value={this.state.own_weight_kg} style={s.inputStyle}
+            onChange={(event) => this.setState({own_weight_kg: event.target.value})} />
             <H2>ÉVJÁRAT</H2>
             <input type="text" value={this.state.year} style={s.inputStyle}
              onChange={(event) => this.setState({year: event.target.value})} />
             <H2>TELJESÍTMÉNY (Lóerő)</H2>
             <input type="text" value={this.state.performance_hp} style={s.inputStyle}
              onChange={(event) => this.setState({performance_hp: event.target.value})} />
-            <H2>isItDiesel</H2>
-            <input type="text" value={this.state.is_it_diesel} style={s.inputStyle}
-             onChange={(event) => this.setState({is_it_diesel: !!event.target.value})} />
+            <H2>Üzemanagy Típúsa</H2>
+            <Select options={[
+                { value: 'diesel', label: 'Dízel' },
+                { value: 'petrol', label: 'Benzin' },
+                { value: 'hybrid', label: 'Hibrid' },
+                { value: 'electric', label: 'Elektromos' },
+              ]} 
+              onChange={val => this.setState({ fuelType: val })}
+              value={this.state.fuelType} placeholder="Select an option"
+            />
              <H2>SZÍN</H2>
             <input type="text" value={this.state.color} style={s.inputStyle}
              onChange={(event) => this.setState({color: event.target.value})} />
@@ -108,7 +112,7 @@ class NewItemPage extends React.PureComponent {
         type,
         year,
         performance_hp,
-        is_it_diesel,
+        fuelType,
         licence_plate1,
         licence_plate2,
         color,
@@ -151,6 +155,11 @@ class NewItemPage extends React.PureComponent {
     }
 
     this.setState({ alertShown: false });
+    const { companyData } = this.props;
+    let carId = 0;
+    if (companyData.cars) {
+      carId = companyData.cars.length;
+    }
     const data = {
         cylinder_capacity,
         own_weight_kg,
@@ -158,13 +167,13 @@ class NewItemPage extends React.PureComponent {
         type,
         year,
         performance_hp,
-        is_it_diesel,
+        fuelType: fuelType.value,
         color,
         licence_plate: licence_plate1 + '-' + licence_plate2,
-        id: this.state.length,
+        id: carId,
     }
-   this.props.postNewCar(this.state.length, data);
-  }
+    this.props.postNewCar(this.props.user.company, carId, data);
+}
 
   renderWorkerForm() {
     const { role, company } = this.props.user;
@@ -341,11 +350,12 @@ const mapStateToProps = (state) => createStructuredSelector({
     response: selectResponse(),
     error: selectError(),
     user: getUser(),
+    companyData: getOwnCompanyData(),
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
-    postNewCar: (id, data) => dispatch(postNewCar(id, data)),
+    postNewCar: (company, id, data) => dispatch(postNewCar(company, id, data)),
     postNewWorker: (data) => dispatch(postNewWorker(data)),
   };
 }

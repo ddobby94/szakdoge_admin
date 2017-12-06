@@ -10,6 +10,9 @@ import {
   getUserDataError,
   getCompanyDataSuccess,
   getCompanyDataError,
+  carsLoaded,
+  workersLoaded,
+  newWorkerAdded,
 } from './actions';
 
 import API from '../../Api'
@@ -20,7 +23,6 @@ import request from 'utils/request';
 export function* getUserDatas(action) {
   const { uid } = action
   try {
-    console.log('heyyyyy user datas')
     const response = yield call(realApi.getUserData, uid)
     console.log('getUserDatas resp', response)
     if (response.ok) {
@@ -40,18 +42,9 @@ export function* getCompanyDatas(action) {
     console.log('getCompanyData resp', response)
     if (response.ok) {
       const data = response.data;
-      let workers = [];
-      for (var key in data.workers) {
-        if (data.workers.hasOwnProperty(key)) {
-          workers.push({ ...data.workers[key], uid: key});
-        }
-      }
-      // for (var key in data.workers) {
-      //   if (data.workers.hasOwnProperty(key)) {
-      //     workers.push({ ...data.workers[key], uid: key});
-      //   }
-      // }
-        yield put(getCompanyDataSuccess(workers));
+      yield put(carsLoaded(data.cars));
+      yield put(workersLoaded(data.workers));
+        yield put(getCompanyDataSuccess(data));
     } else {
         throw response;
     }

@@ -11,7 +11,7 @@ import CenteredSection from '../HomePage/CenteredSection';
 import s from '../Styles';
 import * as firebase from "firebase";
 import { setUserToken, getUserData, getCompanyData } from '../App/actions';
-import { getToken, getUser, error } from '../App/selectors';
+import { getToken, getUser, error, getOwnCompanyData } from '../App/selectors';
 import API from '../../Api'
 const realApi = API.create()
 
@@ -35,15 +35,17 @@ class SelectedCar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      pass: 'superSecret123',
-      email: 'dobisz_david@windowslive.com',
+      // pass: 'superSecret123',
+      // email: 'dobisz_david@windowslive.com',
+      pass: 'Secret123',
+      email: 'mail@mail.com',
       signInError: '',
       clickAble: true,
     };
   }
 
-  componentWillReceiveProps({ user }) {
-    console.log('user', user);
+  componentWillReceiveProps({ user, companyData }) {
+    
     if (user && roles[user.role]) {
       this.props.getCompanyData(user.uid);
       this.props.router.push('/workers');
@@ -67,14 +69,11 @@ class SelectedCar extends React.PureComponent {
 
   register() {
     const { email, pass } = this.state;
-    console.log('email: ',email, pass)
     const auth = firebase.auth();
     const promise = auth.createUserWithEmailAndPassword(email, pass).then( e => this.postSthToDB(e)).catch(e => console.log('error', e));
-    console.log('response: ', promise)
   }
 
   logout() {
-    console.log('HEYY', this.props.user);
     firebase.auth().signOut();
   }
 
@@ -129,6 +128,7 @@ SelectedCar.propTypes = {
 const mapStateToProps = (state) => createStructuredSelector({
   token: getToken(),
   user: getUser(),
+  companyData: getOwnCompanyData(),
 });
 
 export function mapDispatchToProps(dispatch) {

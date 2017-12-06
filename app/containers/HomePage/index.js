@@ -11,15 +11,11 @@ import { Link } from 'react-router';
 import HeaderLink from 'components/Header/HeaderLink';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { makeSelectLoading, makeSelectError, allWorkers } from 'containers/App/selectors';
+import { makeSelectLoading, makeSelectError, getOwnCompanyData, getWorkers } from '../App/selectors';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 import DataTable from 'components/DataTable'
-
 import CenteredSection from './CenteredSection';
-import { loadRepos, loadWorkersData } from '../App/actions';
-import { changeUsername } from './actions';
-import { makeSelectUsername } from './selectors';
 
 const divLineStyle = {
   borderBottomWidth: "10px",
@@ -50,20 +46,15 @@ const rowStyle = {
   textDecoration: 'none',
 }
 
-export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-
-  componentDidMount() {
-    this.props.loadWorkers();
-  }
+export class HomePage extends React.PureComponent {
 
   renderAllUsers() {
     const { workers } = this.props;
-
     return workers.map( val => {
       return(
-        <Link to={'selectedWorker?id=' + val.id}>
+        <Link to={'selectedWorker?id=' + val.workerId}>
           <div
-            key={val.id}
+            key={val.workerId}
             style={divLineStyle}
           >
             <H2 style={rowStyle}>
@@ -110,13 +101,10 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 
   render() {
-    const { loading, error, repos, workers, location } = this.props;
-    const reposListProps = {
-      loading,
-      error,
-      repos,
-    };
-    if (!loading && workers) {
+    const { loading, error, companyData, location } = this.props;
+    if ( !loading && companyData) {
+      const { workers } = companyData;
+      console.log(workers,'workers', companyData, 'companyData')
       return (
         <div>
           <Helmet
@@ -161,7 +149,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
       <div>
         <CenteredSection>
           <H2>
-            LOADING
+            LOADING...
           </H2>
         </CenteredSection>
       </div>
@@ -182,12 +170,13 @@ HomePage.propTypes = {
 const mapStateToProps = (state) => createStructuredSelector({
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  workers: allWorkers(),
+  companyData: getOwnCompanyData(),
+  workers: getWorkers(),
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
-    loadWorkers: () => dispatch(loadWorkersData()),
+    // loadWorkers: () => dispatch(loadWorkersData()),
   };
 }
 

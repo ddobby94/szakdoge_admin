@@ -20,10 +20,7 @@ const AppWrapper = styled.div`
 
 export function App(props) {
   const { user } = props;
-  console.log('user', user)
-  console.log(props)
   const currentLoc = props.router.getCurrentLocation();
-  console.log('currentloc', currentLoc)
   if (!user && props.router && currentLoc.pathname !== '/') {
     props.router.push('/');
   } else if (user === 'user') {

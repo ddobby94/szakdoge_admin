@@ -37,7 +37,6 @@ const s = {
 
 class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
-    console.log('HEADER PROPS', this.props)
     const { company, name, role } = this.props.user;
     return (
       <div>

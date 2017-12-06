@@ -46,6 +46,17 @@ const getError = () => createSelector(
   (globalState) => globalState.getIn('error')
 );
 
+const getOwnCompanyData = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn('companyData')
+);
+
+const getWorkers = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn('workers')
+);
+
+
 const makeSelectLocationState = () => {
   let prevRoutingState;
   let prevRoutingStateJS;
@@ -72,4 +83,6 @@ export {
   allCars,
   getToken,
   getUser,
+  getOwnCompanyData,
+  getWorkers,
 };

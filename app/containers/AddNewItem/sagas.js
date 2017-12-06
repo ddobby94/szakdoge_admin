@@ -5,7 +5,13 @@
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { POST_NEW_CAR, POST_NEW_WORKER } from './constants';
-import { postNewWorkerSuccess, postNewWorkerFailure, postNewCarSuccess, postNewCarFailure } from './actions';
+import { 
+  postNewWorkerSuccess,
+  postNewWorkerFailure,
+  postNewCarSuccess,
+  postNewCarFailure,
+} from './actions';
+import { newCarAdded, newWorkerAdded } from '../App/actions'
 
 import API from '../../Api'
 const realApi = API.create()
@@ -13,11 +19,11 @@ const realApi = API.create()
 import request from 'utils/request';
 
 export function* addNewCar(action) {
-  const { id, data } = action
+  const { id, data, company } = action
   
   try {
-    // const response = yield call(api.addPartnerContacts, authData, contacts, deletedContacts)
-    const response = yield call(realApi.addNewCar, id, data);
+    const response = yield call(realApi.addNewCar, company, id, data);
+    yield put(newCarAdded(data));
     yield put(postNewCarSuccess(response));
   } catch (err) {
     yield put(postNewCarFailure(err));
@@ -30,6 +36,7 @@ export function* addNewWorker(action) {
     try {
         const response = yield call(realApi.setUserData, data);
         if (response.ok) {
+          yield put (newWorkerAdded(data));
           yield put(postNewWorkerSuccess(response));
         } else {
           throw response;

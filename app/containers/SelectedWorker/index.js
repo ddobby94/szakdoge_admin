@@ -14,6 +14,7 @@ import s from '../Styles';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
+import { makeSelectLoading, makeSelectError, getOwnCompanyData, getWorkers } from '../App/selectors';
 const contentWidthPercentage = 60;
 const contentMarginLeft = window.innerWidth * contentWidthPercentage / 300;
 
@@ -27,6 +28,8 @@ const lineComponent = s.lineComponent;
 class SelectedWorker extends React.PureComponent {
   constructor(props) {
     super(props);
+    const d = new Date();
+    console.log(props.location.query.id,'props.location.query.id,')
     this.state = {
       visibleBasicDatas: true,
       visibleRoutes: true,
@@ -36,22 +39,32 @@ class SelectedWorker extends React.PureComponent {
       showPreviousRoutes: true,
       allRoutes: [],
       editDatas: false,
-      startDate: moment(),
-      endDate: moment(),
+      startDate: d,
+      endDate: d,
     };
    
     this.workerSubmit = this.workerSubmit.bind(this);
   }
 
-  componentDidMount() {
-    this.props.loadSelectedWorker(this.state.workerId);
+  componentWillMount() {
+    console.log('******************************')
+    console.log('******************************')
+    console.log('******************************')
+    console.log('******************************')
+    console.log('******************************')
   }
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.selectedWorkerDetails) {
-      console.log('NEWPROPS GOT :', newProps.selectedWorkerDetails)
+  componentDidMount() {
+    this.setState({
+      workerDetails: this.props.workers[this.state.workerId],
+    });
+  }
+
+  componentWillReceiveProps({ workers }) {
+    if (workers) {
+      console.log('NEWPROPS GOT :', workers)
       this.setState({
-        workerDetails: newProps.selectedWorkerDetails
+        workerDetails: workers[this.state.workerId],
       });
     }
   }
@@ -79,24 +92,6 @@ class SelectedWorker extends React.PureComponent {
             onChange={(event) =>  this.setState({workerDetails: { ...workerDetails, phoneNumber: event.target.value }})}
           />
         </div>
-        <div style={lineComponent}>
-          <H2>POZÍCIÓ:</H2>
-          <input 
-            type="text" style={this.getInputStyle()} 
-            disabled={!this.state.editDatas}
-            value={workerDetails.position}
-            onChange={(event) =>  this.setState({workerDetails: { ...workerDetails, position: event.target.value }})}
-          />
-        </div>
-        <div style={lineComponent}>
-          <H2>SZÜLETÉSI IDŐ:</H2>
-          <input 
-            type="text" style={this.getInputStyle()} 
-            disabled={!this.state.editDatas}
-            value={workerDetails.dateOfBirth}
-            onChange={(event) =>  this.setState({workerDetails: { ...workerDetails, dateOfBirth: event.target.value }})}
-          />
-        </div>
         <Button onClick={this.workerSubmit} >
           {this.state.editDatas? 'MENTÉS': 'ADATOK SZERKESZTÉSE'}
         </Button>
@@ -119,10 +114,6 @@ class SelectedWorker extends React.PureComponent {
     } = this.state.workerDetails;
     if (!name || typeof name != 'string') {
       window.alert('Kérjük töltsd ki a telesn név mezőt!');
-      return ;
-    }
-    if (!dateOfBirth) {
-      window.alert('Kérjük töltsd ki születési dátumot!');
       return ;
     }
     if (!phoneNumber ) {
@@ -215,6 +206,8 @@ class SelectedWorker extends React.PureComponent {
   render() {
     const { selectedWorkerDetails, loading, error } = this.props;
     const { workerDetails, showBasicDatas, showPreviousRoutes } = this.state;
+    console.log('workerDetailsworkerDetails', workerDetails)
+    return (<div>hey</div>)
     if (!loading && workerDetails) {
       return (
         <div>
@@ -298,6 +291,7 @@ const mapStateToProps = (state) => createStructuredSelector({
     loading: selectLoading(),
     selectedWorkerDetails: selectWorkerDetails(),
     allRoutes: selectAllRoutes(),
+    workers: getWorkers(),
 });
 
 export function mapDispatchToProps(dispatch) {

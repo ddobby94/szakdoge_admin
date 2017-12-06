@@ -26,15 +26,15 @@ class DataTable extends React.Component {
       location = '/' + location;
     }
     let columns;
-    if (location === '/') {
+    if (location === '/workers') {
       columns = [
         {
           Header: 'Név',
           accessor: 'name',
         },
         {
-          Header: 'Pozíció',
-          accessor: 'position',
+          Header: 'Jog',
+          accessor: 'role',
         },
         {
           Header: 'Email cím',
@@ -117,7 +117,7 @@ class DataTable extends React.Component {
     const { location } = this.state;
     let toUrl;
     switch (location) {
-      case '/':
+      case '/workers':
         toUrl = 'selectedWorker?id=' + index;
         break;
       case '/cars':
@@ -158,6 +158,7 @@ class DataTable extends React.Component {
           getTdProps={(state, rowInfo, column, instance) => {
             return {
               onClick: (e, handleOriginal) => {
+                console.log(rowInfo.index)
                 const toUrl = this.getPath(rowInfo.index);
                 if (toUrl) {
                   browserHistory.push(toUrl);

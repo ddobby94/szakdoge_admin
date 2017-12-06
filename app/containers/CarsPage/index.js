@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import HeaderLink from 'components/Header/HeaderLink';
-import { makeSelectLoading, makeSelectError, allCars } from 'containers/App/selectors';
+import { makeSelectLoading, makeSelectError, allCars } from '../App/selectors';
 import H2 from 'components/H2';
 import DataTable from 'components/DataTable'
 import CenteredSection from './CenteredSection';
@@ -29,7 +29,7 @@ class CarsPage extends React.PureComponent {
 
   render() {
     const { loading, error, cars, location } = this.props;
-    if (!loading && cars) {
+    if (true ) {//!loading && cars) {
       return (
         <div>
           <Helmet
