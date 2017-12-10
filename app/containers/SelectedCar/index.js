@@ -15,7 +15,7 @@ import s from '../Styles';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
-
+import { makeSelectLoading, makeSelectError, getOwnCompanyData, getCars } from '../App/selectors';
 const contentWidthPercentage = 60;
 const contentMarginLeft = window.innerWidth * contentWidthPercentage / 300;
 
@@ -27,36 +27,42 @@ const basicDataContainer ={
 class SelectedCar extends React.PureComponent {
   constructor(props) {
     super(props);
+    const carId = props.location.query.id;
+    const carDetails = props.cars[carId];
     this.state = {
       visibleBasicDatas: true,
       visibleRoutes: true,
-      carId: props.location.query.id,
-      selectedCarDetails: null,
+      carId,
+      selectedCarDetails: {
+        ...carDetails,
+        licence_plate1: carDetails.licence_plate.split('-')[0],
+        licence_plate2: carDetails.licence_plate.split('-')[1],
+      },
       showBasicDatas: true,
       showPreviousRoutes: true,
       allRoutes: [],
       editDatas: false,
-      startDate: moment(),
-      endDate: moment(),
+      startDate: new Date(),
+      endDate: new Date(),
     };
     this.carSubmit = this.carSubmit.bind(this);
   }
 
   componentDidMount() {
-    this.props.loadSelectedCar(this.state.carId);
+    // this.props.loadSelectedCar(this.state.carId);
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.selectedCarDetails) {
-      this.setState({
-        selectedCarDetails: {
-          ...newProps.selectedCarDetails,
-          licence_plate1: newProps.selectedCarDetails.licence_plate.split('-')[0],
-          licence_plate2: newProps.selectedCarDetails.licence_plate.split('-')[1],
-        },
-        allRoutes: this.props.allRoutes,
-      });
-    }
+    // if (newProps.selectedCarDetails) {
+    //   this.setState({
+    //     selectedCarDetails: {
+    //       ...newProps.selectedCarDetails,
+    //       licence_plate1: newProps.selectedCarDetails.licence_plate.split('-')[0],
+    //       licence_plate2: newProps.selectedCarDetails.licence_plate.split('-')[1],
+    //     },
+    //     allRoutes: this.props.allRoutes,
+    //   });
+    // }
   }
 
   getBasicDatas() {
@@ -274,8 +280,9 @@ class SelectedCar extends React.PureComponent {
   getRoutesTable(){
     const { location, allRoutes } = this.props;
     if (allRoutes) {
-      const start = moment(this.state.startDate).unix() * 1000;
-      const end = moment(this.state.endDate).unix() * 1000;
+      const start = moment.unix(this.state.startDate) * 1000;
+      const end = moment.unix(this.state.endDate) * 1000;
+      
       let filteredRoutes = allRoutes;
       let startIsSmallerThanEnd = true;
       if (start !== end && start < end) {
@@ -403,6 +410,7 @@ const mapStateToProps = (state) => createStructuredSelector({
   loading: selectLoading(),
   selectedCarDetails: selectCarDetails(),
   allRoutes: selectAllRoutes(),
+  cars: getCars(),
 });
 
 export function mapDispatchToProps(dispatch) {

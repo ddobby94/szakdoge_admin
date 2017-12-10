@@ -15,6 +15,9 @@ class DataTable extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    console.log('---------------------------------------')
+    console.log('TABLE GOT newProps:', newProps);
+    console.log('---------------------------------------')
     if (newProps.data) {
       this.setState({ data: newProps.data })
     }
@@ -148,10 +151,11 @@ class DataTable extends React.Component {
   }
 
   render() {
+    console.log('This.props.data, ', this.props.data);
     return (
       <div>
         <ReactTable
-          data={this.state.data}
+          data={this.props.data}
           columns={this.tableColumns()}
           filterable
           defaultPageSize={10}
@@ -205,5 +209,4 @@ const columns = [{
     </div>
   )
 }]
-
 */

@@ -8,13 +8,13 @@ import { makeSelectLoading, makeSelectError, allCars } from '../App/selectors';
 import H2 from 'components/H2';
 import DataTable from 'components/DataTable'
 import CenteredSection from './CenteredSection';
-import { loadCars } from '../App/actions';
+// import { loadCars } from '../App/actions';
 import s from '../Styles'
 
 class CarsPage extends React.PureComponent { 
 
   componentDidMount() {
-    this.props.loadCars();
+    // this.props.loadCars();
   }
 
   renderAddCarsButton() {
@@ -29,7 +29,8 @@ class CarsPage extends React.PureComponent {
 
   render() {
     const { loading, error, cars, location } = this.props;
-    if (true ) {//!loading && cars) {
+    console.log('cars,',cars)
+    if (!loading && cars) {
       return (
         <div>
           <Helmet
@@ -74,7 +75,7 @@ class CarsPage extends React.PureComponent {
       <div>
         <CenteredSection>
           <H2>
-            LOADING
+            LOADING...
           </H2>
         </CenteredSection>
       </div>
@@ -86,7 +87,7 @@ class CarsPage extends React.PureComponent {
 CarsPage.propTypes = {
   loading: React.PropTypes.bool,
   cars: React.PropTypes.array,
-  loadCars: React.PropTypes.func,
+  // loadCars: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => createStructuredSelector({
@@ -97,7 +98,7 @@ const mapStateToProps = (state) => createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
-    loadCars: () => dispatch(loadCars()),
+    // loadCars: () => dispatch(loadCars()),
   };
 }
 

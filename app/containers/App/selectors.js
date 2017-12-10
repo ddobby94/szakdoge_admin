@@ -56,6 +56,10 @@ const getWorkers = () => createSelector(
   (globalState) => globalState.getIn('workers')
 );
 
+const getCars = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn('cars')
+);
 
 const makeSelectLocationState = () => {
   let prevRoutingState;
@@ -85,4 +89,5 @@ export {
   getUser,
   getOwnCompanyData,
   getWorkers,
+  getCars,
 };

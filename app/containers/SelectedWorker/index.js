@@ -29,12 +29,13 @@ class SelectedWorker extends React.PureComponent {
   constructor(props) {
     super(props);
     const d = new Date();
-    console.log(props.location.query.id,'props.location.query.id,')
+    const workerId = props.location.query.id;
+    const workerDetails = props.workers[workerId];
     this.state = {
       visibleBasicDatas: true,
       visibleRoutes: true,
       workerId: props.location.query.id,
-      workerDetails: null,
+      workerDetails,
       showBasicDatas: true,
       showPreviousRoutes: true,
       allRoutes: [],
@@ -46,27 +47,10 @@ class SelectedWorker extends React.PureComponent {
     this.workerSubmit = this.workerSubmit.bind(this);
   }
 
-  componentWillMount() {
-    console.log('******************************')
-    console.log('******************************')
-    console.log('******************************')
-    console.log('******************************')
-    console.log('******************************')
-  }
-
   componentDidMount() {
     this.setState({
       workerDetails: this.props.workers[this.state.workerId],
     });
-  }
-
-  componentWillReceiveProps({ workers }) {
-    if (workers) {
-      console.log('NEWPROPS GOT :', workers)
-      this.setState({
-        workerDetails: workers[this.state.workerId],
-      });
-    }
   }
 
   getBasicDatas() {
@@ -204,10 +188,10 @@ class SelectedWorker extends React.PureComponent {
   }
 
   render() {
-    const { selectedWorkerDetails, loading, error } = this.props;
+    const { selectedWorkerDetails, loading, error, workers } = this.props;
     const { workerDetails, showBasicDatas, showPreviousRoutes } = this.state;
-    console.log('workerDetailsworkerDetails', workerDetails)
-    return (<div>hey</div>)
+    console.log('workers******', workers)
+
     if (!loading && workerDetails) {
       return (
         <div>
