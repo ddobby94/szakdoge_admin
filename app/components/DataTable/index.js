@@ -7,6 +7,7 @@ class DataTable extends React.Component {
   constructor(props) {
     super(props);
     const data =  props.data
+    console.log('DATATABLE DATA:', data)
     this.state = {
         mainHeaderName: props.mainHeaderName || 'TÁBLÁZAT',
         data: data,
@@ -15,9 +16,6 @@ class DataTable extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    console.log('---------------------------------------')
-    console.log('TABLE GOT newProps:', newProps);
-    console.log('---------------------------------------')
     if (newProps.data) {
       this.setState({ data: newProps.data })
     }
@@ -151,7 +149,6 @@ class DataTable extends React.Component {
   }
 
   render() {
-    console.log('This.props.data, ', this.props.data);
     return (
       <div>
         <ReactTable

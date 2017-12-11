@@ -14,7 +14,7 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { getUser } from '../App/selectors';
 import * as firebase from "firebase";
-
+import { getConsumptionNorm } from '../../utils/RoutesData';
 
 class NewItemPage extends React.PureComponent {
   constructor(props) {
@@ -63,12 +63,17 @@ class NewItemPage extends React.PureComponent {
             <Select options={[
                 { value: 'diesel', label: 'Dízel' },
                 { value: 'petrol', label: 'Benzin' },
-                { value: 'hybrid', label: 'Hibrid' },
-                { value: 'electric', label: 'Elektromos' },
+                // { value: 'hybrid', label: 'Hibrid' },
+                // { value: 'electric', label: 'Elektromos' },
               ]} 
               onChange={val => this.setState({ fuelType: val })}
               value={this.state.fuelType} placeholder="Select an option"
             />
+            {/* Az autógázzal közlekedőknél a normát a fenti táblázat, valamint cseppfolyós propán-bután gázüzem (LPG) esetén 1,2 (liter/liter) értékű, földgáz (CNG, LNG) üzem esetén pedig 0,8 (Nm3/liter) értékű módosító tényező szorzataként kell megállapítani. Abban az esetben, ha egy jármű üzemanyag-fogyasztási normája nem állapítható meg - például egy hibrid vagy elektromos gépjármű esetében - a 60/1992. (IV. 1.) Korm. rendelet 2. § (1) bekezdésében foglaltak alapján, akkor az említett § (2) bekezdése a következő szabályt írja elő: 
+"(2) Az 1. mellékletben fel nem tüntetett típusú, valamint az 1/A. melléklet alapján meg nem határozható alapnormájú, illetőleg a rendeletben meghatározottaktól eltérő fajtájú üzemanyaggal üzemelő gépjárművek esetében az alapnorma értékét a gyártó vagy
+a) a gyártó adatai, vagy
+b) az üzemanyag-fogyasztás mérése
+alapján műszaki szakértő állapíthatja meg." */}
              <H2>SZÍN</H2>
             <input type="text" value={this.state.color} style={s.inputStyle}
              onChange={(event) => this.setState({color: event.target.value})} />
@@ -158,8 +163,9 @@ class NewItemPage extends React.PureComponent {
     const { companyData } = this.props;
     let carId = 0;
     if (companyData.cars) {
-      carId = companyData.cars.length;
+      carId = companyData.cars[companyData.cars.length - 1].id + 1;
     }
+    const consuption_norm = getConsumptionNorm(cylinder_capacity, fuelType. value);
     const data = {
         cylinder_capacity,
         own_weight_kg,
@@ -167,6 +173,7 @@ class NewItemPage extends React.PureComponent {
         type,
         year,
         performance_hp,
+        consuptionNorm,
         fuelType: fuelType.value,
         color,
         licence_plate: licence_plate1 + '-' + licence_plate2,

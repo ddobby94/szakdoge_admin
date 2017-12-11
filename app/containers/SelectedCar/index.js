@@ -48,23 +48,6 @@ class SelectedCar extends React.PureComponent {
     this.carSubmit = this.carSubmit.bind(this);
   }
 
-  componentDidMount() {
-    // this.props.loadSelectedCar(this.state.carId);
-  }
-
-  componentWillReceiveProps(newProps) {
-    // if (newProps.selectedCarDetails) {
-    //   this.setState({
-    //     selectedCarDetails: {
-    //       ...newProps.selectedCarDetails,
-    //       licence_plate1: newProps.selectedCarDetails.licence_plate.split('-')[0],
-    //       licence_plate2: newProps.selectedCarDetails.licence_plate.split('-')[1],
-    //     },
-    //     allRoutes: this.props.allRoutes,
-    //   });
-    // }
-  }
-
   getBasicDatas() {
     const { selectedCarDetails } = this.state;
     return (
@@ -278,7 +261,8 @@ class SelectedCar extends React.PureComponent {
   }
 
   getRoutesTable(){
-    const { location, allRoutes } = this.props;
+    const { location } = this.props;
+    const allRoutes = this.state.selectedCarDetails.routes;
     if (allRoutes) {
       const start = moment.unix(this.state.startDate) * 1000;
       const end = moment.unix(this.state.endDate) * 1000;
@@ -319,6 +303,12 @@ class SelectedCar extends React.PureComponent {
             showDropDown={false}
             sortByDates={true}
           />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h2>Nincs korábbi út!</h2>
         </div>
       );
     }

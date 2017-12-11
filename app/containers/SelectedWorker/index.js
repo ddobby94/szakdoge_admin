@@ -15,6 +15,8 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 import { makeSelectLoading, makeSelectError, getOwnCompanyData, getWorkers } from '../App/selectors';
+import { generateXLSX } from '../../utils/excelHelper';
+
 const contentWidthPercentage = 60;
 const contentMarginLeft = window.innerWidth * contentWidthPercentage / 300;
 
@@ -40,22 +42,15 @@ class SelectedWorker extends React.PureComponent {
       showPreviousRoutes: true,
       allRoutes: [],
       editDatas: false,
-      startDate: d,
-      endDate: d,
+      startDate: moment(d),
+      endDate: moment(d),
     };
    
     this.workerSubmit = this.workerSubmit.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({
-      workerDetails: this.props.workers[this.state.workerId],
-    });
-  }
-
   getBasicDatas() {
     const { workerDetails } = this.state;
-    console.log('workerDetails :', workerDetails)
     return (
       <div style={basicDataContainer}>
         <div style={lineComponent}>
@@ -104,10 +99,6 @@ class SelectedWorker extends React.PureComponent {
       window.alert('Kérjük töltsd ki a telefonszámot!');
       return ;
     }
-    if (!position || typeof position != 'string') {
-      window.alert('Kérjük töltsd ki pozíciót!');
-      return ;
-    }
     if (!email || typeof email != 'string') {
       window.alert('Kérjük töltsd ki az email címet!');
       return ;
@@ -124,8 +115,9 @@ class SelectedWorker extends React.PureComponent {
     this.setState({ editDatas: false });
   }
 
-  getRoutesTable(){
-    const { location, allRoutes } = this.props;
+  getRoutesTable() {
+    const { location } = this.props;
+    const allRoutes = this.state.workerDetails.routes;
     if (allRoutes) {
       const start = moment(this.state.startDate).unix() * 1000;
       const end = moment(this.state.endDate).unix() * 1000;
@@ -133,14 +125,17 @@ class SelectedWorker extends React.PureComponent {
       let startIsSmallerThanEnd = true;
       if (start !== end && start < end) {
         filteredRoutes = allRoutes.filter( v => {
+          console.log('V', v)
           let d = new Date(v.date).getTime()
-          return d < end && d > start
+          console.log('V.date :', d)          
+          return end >= d && d >= start
         })
-      } else if (start < end) {
+      } else if (start > end) {
         startIsSmallerThanEnd = false;
       }
-      const data = setData(filteredRoutes)
-
+      const data = startIsSmallerThanEnd ? setData(filteredRoutes) : [{}];
+      console.log('START,', start)
+      console.log('end,', end)
       return (
         <div>
           { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
@@ -151,10 +146,12 @@ class SelectedWorker extends React.PureComponent {
           <div style={s.datePickerComponents}>
             <DatePicker
               selected={this.state.startDate}
+              dateFormat="YYYY.MM.DD"
               onChange={(date) => this.setState({ startDate: date })}
             />
             <DatePicker
               selected={this.state.endDate}
+              dateFormat="YYYY.MM.DD"
               onChange={(date) => this.setState({ endDate: date })}
             />
           </div>
@@ -165,9 +162,32 @@ class SelectedWorker extends React.PureComponent {
             showDropDown={false}
             sortByDates={true}
           />
+          {data && startIsSmallerThanEnd && (<div 
+            onClick={() => this.saveDataTable(data)}
+            style={{ 
+              width: 200,
+              height: 200,
+              backgroundColor: 'rgba(160,40,100,0.7)'
+            }}
+          >
+            SAVE DATATABLE!!!
+          </div>)}
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h2>Nincs korábbi út!</h2>
         </div>
       );
     }
+  }
+
+  saveDataTable(filteredRoutes) {
+    const start = moment(this.state.startDate).format("YYYY.M.DD.");
+    const end = moment(this.state.endDate).format("YYYY.M.DD.");
+    const { workerDetails } = this.state;
+    generateXLSX(workerDetails, filteredRoutes, start, end, 'user');
   }
 
   getInputStyle() {
@@ -190,7 +210,6 @@ class SelectedWorker extends React.PureComponent {
   render() {
     const { selectedWorkerDetails, loading, error, workers } = this.props;
     const { workerDetails, showBasicDatas, showPreviousRoutes } = this.state;
-    console.log('workers******', workers)
 
     if (!loading && workerDetails) {
       return (

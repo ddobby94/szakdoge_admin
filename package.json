@@ -182,7 +182,6 @@
     "setupTestFrameworkScriptFile": "<rootDir>/internals/testing/test-bundler.js",
     "testRegex": "tests/.*\\.test\\.js$"
   },
-
   "dependencies": {
     "apisauce": "0.14.1",
     "babel-cli": "6.18.0",
@@ -221,6 +220,7 @@
     "exports-loader": "0.6.3",
     "express": "4.14.0",
     "file-loader": "0.9.0",
+    "file-saver": "^1.3.3",
     "firebase": "^4.6.2",
     "fontfaceobserver": "2.0.7",
     "html-loader": "0.4.4",
@@ -273,7 +273,8 @@
     "webpack": "2.2.0-rc.3",
     "webpack-dev-middleware": "1.9.0",
     "webpack-hot-middleware": "2.15.0",
-    "whatwg-fetch": "2.0.1"
+    "whatwg-fetch": "2.0.1",
+    "xlsx": "^0.11.13"
   },
   "devDependencies": {
     "babel-cli": "6.18.0",

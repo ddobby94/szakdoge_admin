@@ -14,3 +14,55 @@ export const setData = (data) => {
     return val;
   });
 }
+
+export const getConsumptionNorm = (cylinder_capacity, fuelType) => {
+  // pl: 1350 cm^3 and diesel: 8.6 liter / 100 km
+  if (fuelType === 'diesel') {
+    if (cylinder_capacity <= 1000) {
+      return 7.6;
+    } else if (cylinder_capacity < 1500) {
+      return 8.6;
+    } else if (cylinder_capacity < 2000) {
+      return 9.5;
+    } else if (cylinder_capacity < 3000) {
+      return 11.4;
+    } else if (cylinder_capacity >= 3001) {
+      return 13.3;
+    }
+  } else if (fuelType === 'petrol') {
+    if (cylinder_capacity <= 1500) {
+      return 5.7;
+    } else if (cylinder_capacity < 2000) {
+      return 6.7;
+    } else if (cylinder_capacity < 3000) {
+      return 7.6;
+    } else if (cylinder_capacity >= 3001) {
+      return 9.5;
+    }
+  }
+/*
+segédmotoros kerékpár:
+
+ 3,0 liter/100 km,
+
+motorkerékpár: 80 cm3-ig
+
+ 3,5 liter/100 km,
+
+motorkerékpár: 81-125 cm3
+
+ 3,8 liter/100 km,
+
+motorkerékpár: 126-250 cm3
+
+ 4 liter/100 km,
+
+motorkerékpár: 251-500 cm3
+
+ 4,5 liter/100 km,
+
+motorkerékpár: 500 cm3 felett
+
+ 5 liter/100 km.
+*/
+}
