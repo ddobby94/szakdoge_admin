@@ -6,6 +6,8 @@
 import { fromJS } from 'immutable';
 import { combineReducers } from 'redux-immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
+import { persistStore, persistCombineReducers } from 'redux-persist';
+import storage from 'redux-persist/es/storage';
 
 import globalReducer from 'containers/App/reducer';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
@@ -38,11 +40,16 @@ function routeReducer(state = routeInitialState, action) {
   }
 }
 
+const config = {
+  key: 'root',
+  storage,
+}
+
 /**
  * Creates the main reducer with the asynchronously loaded ones
  */
 export default function createReducer(asyncReducers) {
-  return combineReducers({
+  return persistCombineReducers(config, {
     route: routeReducer,
     global: globalReducer,
     language: languageProviderReducer,

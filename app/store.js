@@ -3,6 +3,9 @@
  */
 
 import { createStore, applyMiddleware, compose } from 'redux';
+import { persistStore, persistCombineReducers } from 'redux-persist';
+// import { persistStore, autoRehydrate } from 'redux-persist-immutable'
+import storage from 'redux-persist/es/storage';
 import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
@@ -12,6 +15,8 @@ import { createLogger } from 'redux-logger'
 const logger = createLogger();
 
 const sagaMiddleware = createSagaMiddleware();
+
+const reducer = createReducer();
 
 export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
@@ -35,18 +40,37 @@ export default function configureStore(initialState = {}, history) {
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
       window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
   /* eslint-enable */
+  // return new Promise((resolve, reject) => {
+  //   try {
+  //     const store = createStore(
+  //       reducer,
+  //       initialState,
+  //       composeEnhancers(...enhancers)
+  //     );
+
+  //     persistStore(
+  //       store,
+  //       { storage: localStorage },
+  //       () => resolve(store)
+  //     );
+  //   } catch (e) {
+  //     reject(e);
+  //   }
+  // });
 
   const store = createStore(
-    createReducer(),
-    fromJS(initialState),
+    reducer,
+    initialState,
     composeEnhancers(...enhancers)
   );
+
+  const persistor = persistStore(store, storage, () => { store.getState() })
 
   // Extensions
   store.runSaga = sagaMiddleware.run;
   store.asyncReducers = {}; // Async reducer registry
 
-  // Make reducers hot reloadable, see http://mxs.is/googmo
+    // Make reducers hot reloadable, see http://mxs.is/googmo
   /* istanbul ignore next */
   if (module.hot) {
     module.hot.accept('./reducers', () => {
@@ -59,5 +83,5 @@ export default function configureStore(initialState = {}, history) {
     });
   }
 
-  return store;
+  return { store, persistor };
 }

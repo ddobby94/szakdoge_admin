@@ -17,34 +17,27 @@ import H2 from 'components/H2';
 import DataTable from 'components/DataTable'
 import CenteredSection from './CenteredSection';
 
-const divLineStyle = {
-  borderBottomWidth: "10px",
-  borderColor: "black",
-  display: "flex",
-  flexDirecton: "row",
-  justifyContent: "space-around",
-}
-
-const newCarButtonContainerStyle = {
-  display: "flex",
-  flexDirecton: "row",
-  justifyContent: "flex-end",
-}
-
-const addNewCarButton = {
-  width: 250,
-  height: 100,
-  marginRight: 100,
-  borderColor: 'black',
-  borderWidth: 5,
-  borderRadius: 7,
-  backgroundColor: 'rgba(255,20,20,0.3)',
-}
-
-const rowStyle = {
-  color: 'black',
-  textDecoration: 'none',
-}
+const s = {
+  newCarButtonContainerStyle: {
+    display: "flex",
+    flexDirecton: "row",
+    justifyContent: "flex-end",
+  },
+  newWorkerButton: {
+    margin: 20,
+  },
+  divLineStyle: {
+    borderBottomWidth: "10px",
+    borderColor: "black",
+    display: "flex",
+    flexDirecton: "row",
+    justifyContent: "space-around",
+  },
+  rowStyle: {
+    color: 'black',
+    textDecoration: 'none',
+  },
+};
 
 export class HomePage extends React.PureComponent {
 
@@ -55,15 +48,15 @@ export class HomePage extends React.PureComponent {
         <Link to={'selectedWorker?id=' + val.workerId}>
           <div
             key={val.workerId}
-            style={divLineStyle}
+            style={s.divLineStyle}
           >
-            <H2 style={rowStyle}>
+            <H2 style={s.rowStyle}>
               {val.name}
             </H2>
-            <H2 style={rowStyle}>
+            <H2 style={s.rowStyle}>
               {val.position}
             </H2>
-            <H2 style={rowStyle}>
+            <H2 style={s.rowStyle}>
               {val.email}
             </H2>
           </div>
@@ -72,28 +65,11 @@ export class HomePage extends React.PureComponent {
     })
   }
 
-  renderTableHeader() {
-    return(
-      <div
-        style={divLineStyle}
-      >
-        <H1 style={{}}>
-          NÉV
-        </H1>
-        <H1 style={{}}>
-          POZÍCIÓ
-        </H1>
-        <H1 style={{}}>
-          EMAIL CÍM
-        </H1>
-      </div>
-    );
-  }
 
   renderAddWorkersButton() {
     return(
-      <div style={newCarButtonContainerStyle}>
-        <HeaderLink to='new?new=worker' >
+      <div style={s.newCarButtonContainerStyle}>
+        <HeaderLink to='new?new=worker' style={s.newWorkerButton}>
           <p id='newWorker'> ÚJ ALKALMAZOTT HOZZÁADÁSA</p>
         </HeaderLink>
       </div>

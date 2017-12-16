@@ -1,81 +1,104 @@
-/**
- * app.js
- *
- * This is the entry file for the application, only setup and boilerplate
- * code.
- */
 
-// Needed for redux-saga es6 generator support
 import 'babel-polyfill';
-
-// Import all the third party stuff
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/es/integration/react'
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
 import 'sanitize.css/sanitize.css';
-import * as firebase from "firebase";
 
-// Import root app
 import App from 'containers/App';
-
-// Import selector for `syncHistoryWithStore`
 import { makeSelectLocationState } from 'containers/App/selectors';
-
-// Import Language Provider
 import LanguageProvider from 'containers/LanguageProvider';
 
-// Load the favicon, the manifest.json file and the .htaccess file
 /* eslint-disable import/no-webpack-loader-syntax */
 import '!file-loader?name=[name].[ext]!./favicon.ico';
 import '!file-loader?name=[name].[ext]!./manifest.json';
 import 'file-loader?name=[name].[ext]!./.htaccess'; // eslint-disable-line import/extensions
 /* eslint-enable import/no-webpack-loader-syntax */
 
+import * as firebase from "firebase";
 import configureStore from './store';
-
-// Import i18n messages
 import { translationMessages } from './i18n';
-
-// Import CSS reset and Global Styles
 import './global-styles';
-
-// Import routes
 import createRoutes from './routes';
-
-// Observe loading of Open Sans (to remove open sans, remove the <link> tag in
-// the index.html file and this observer)
+const initialState = {};
+const { store, persistor } = configureStore(initialState, browserHistory);
 const openSansObserver = new FontFaceObserver('Open Sans', {});
 
-// When Open Sans is loaded, add a font-family using Open Sans to the body
 openSansObserver.load().then(() => {
   document.body.classList.add('fontLoaded');
 }, () => {
   document.body.classList.remove('fontLoaded');
 });
 
-// Create redux store with history
-// this uses the singleton browserHistory provided by react-router
-// Optionally, this could be changed to leverage a created history
-// e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
-const initialState = {};
-const store = configureStore(initialState, browserHistory);
-
-// Sync history and store, as the react-router-redux reducer
-// is under the non-default key ("routing"), selectLocationState
-// must be provided for resolving how to retrieve the "route" in the state
-const history = syncHistoryWithStore(browserHistory, store, {
-  selectLocationState: makeSelectLocationState(),
-});
 
 // Set up the router, wrapping all Routes in the App component
-const rootRoute = {
-  component: App,
-  childRoutes: createRoutes(store),
-};
+
+
+const onBeforeLift = () => {
+  // take some action before the gate lifts
+}
+
+class Bootloader extends Component {
+  state = {
+    store: null,
+    persistor: null,
+  }
+
+  async componentWillMount () {
+    const { store, persistor } = await configureStore(initialState, browserHistory);
+    this.setState({ store, persistor });
+  }
+
+  render () {
+    console.log('STORE: ', this.state.store)
+    console.log('****************************')
+    console.log('persistor',this.state.persistor)
+    if (this.state.store === null || this.state.persistor === null) {
+      return (
+        <h1>
+          Booting...
+        </h1>
+      )
+    }
+    console.log('STORE: ', this.state.store)
+    console.log('****************************')
+    console.log('persistor',this.state.persistor)
+    const rootRoute = {
+      component: App,
+      childRoutes: createRoutes(this.state.store),
+    };
+    const history = syncHistoryWithStore(browserHistory, this.state.store, {
+      selectLocationState: makeSelectLocationState(),
+    });
+    console.log('rootRoute: ', rootRoute)
+    return (
+      <Provider store={this.state.store}>
+        <PersistGate 
+          loading={<div> Loading....</div>}
+          // onBeforeLift={onBeforeLift}
+          persistor={this.state.persistor}
+        >
+          <LanguageProvider messages={this.props.messages}>
+            <Router
+              history={history}
+              routes={rootRoute}
+              render={
+                applyRouterMiddleware(useScroll())
+              }
+            />
+        </LanguageProvider>
+      </PersistGate>
+    </Provider>
+    )
+  }
+}
+
+
 
 const render = (messages) => {
 
@@ -88,21 +111,7 @@ const render = (messages) => {
     messagingSenderId: "478356909002"
   };
   firebase.initializeApp(config);
-  ReactDOM.render(
-    <Provider store={store}>
-      <LanguageProvider messages={messages}>
-        <Router
-          history={history}
-          routes={rootRoute}
-          render={
-            // Scroll to top when going to a new page, imitating default browser
-            // behaviour
-            applyRouterMiddleware(useScroll())
-          }
-        />
-      </LanguageProvider>
-    </Provider>,
-    document.getElementById('app')
+  ReactDOM.render(<Bootloader messages={messages}/>, document.getElementById('app')
   );
 };
 

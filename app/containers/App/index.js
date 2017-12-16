@@ -20,11 +20,20 @@ const AppWrapper = styled.div`
 
 export function App(props) {
   const { user } = props;
-  const currentLoc = props.router.getCurrentLocation();
-  if (!user && props.router && currentLoc.pathname !== '/') {
-    props.router.push('/');
-  } else if (user === 'user') {
-    props.router.push('/');
+  // console.log('USER')
+  // console.log('USER')
+  console.log('USER')
+  console.log(user)
+  console.log('USER')
+  // console.log('USER')
+  // console.log('USER')
+  if (props.router) {
+    const currentLoc = props.router.getCurrentLocation();
+    if (!user && props.router && currentLoc.pathname !== '/') {
+      props.router.push('/');
+    } else if (user === 'user') {
+      props.router.push('/');
+    }
   }
   return (
     <AppWrapper>
@@ -47,7 +56,7 @@ App.propTypes = {
 };
 
 const mapStateToProps = (state) => createStructuredSelector({
-  token: getToken(),
+  // token: getToken(),
   user: getUser(),
 });
 

@@ -29,7 +29,7 @@ LanguageProvider.propTypes = {
   children: React.PropTypes.element.isRequired,
 };
 
-const mapStateToProps = createSelector(
+const mapStateToProps = (state) => createSelector(
   makeSelectLocale(),
   (locale) => ({ locale })
 );
