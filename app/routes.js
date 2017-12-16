@@ -42,8 +42,10 @@ export default function createRoutes(store) {
       name: 'workers',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/HomePage/reducer'),
-          import('containers/HomePage/sagas'),
+          // import('containers/HomePage/reducer'),
+          // import('containers/HomePage/sagas'),
+          import('containers/App/reducer'),
+          import('containers/App/sagas'),
           import('containers/HomePage'),
         ]);
 
@@ -63,13 +65,14 @@ export default function createRoutes(store) {
       name: 'cars',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/CarsPage/sagas'),
+          import('containers/App/reducer'),
+          import('containers/App/sagas'),
           import('containers/CarsPage'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([sagas, component]) => {
+        importModules.then(([reducer, sagas, component]) => {
           injectSagas(sagas.default);
           renderRoute(component);
         });
@@ -80,8 +83,8 @@ export default function createRoutes(store) {
       name: 'new',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/AddNewItem/reducer'),
-          import('containers/AddNewItem/sagas'),
+          import('containers/App/reducer'),
+          import('containers/App/sagas'),
           import('containers/AddNewItem'),
         ]);
 
@@ -100,8 +103,8 @@ export default function createRoutes(store) {
       name: 'selectedWorker',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/SelectedWorker/reducer'),
-          import('containers/SelectedWorker/sagas'),
+          import('containers/App/reducer'),
+          import('containers/App/sagas'),
           import('containers/SelectedWorker'),
         ]);
 
@@ -120,8 +123,8 @@ export default function createRoutes(store) {
       name: 'selectedCar',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/SelectedCar/reducer'),
-          import('containers/SelectedCar/sagas'),
+          import('containers/App/reducer'),
+          import('containers/App/sagas'),
           import('containers/SelectedCar'),
         ]);
 

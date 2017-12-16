@@ -7,7 +7,7 @@ import { postNewCar, postNewWorker } from './actions';
 import H2 from 'components/H2';
 import CenteredSection from '../HomePage/CenteredSection';
 import { loadCars } from '../App/actions';
-import { allCars,  allWorkers, getOwnCompanyData } from '../App/selectors';
+import { allCars,  allWorkers, getOwnCompanyData, makeSelectLoading } from '../App/selectors';
 import { selectLoading, selectResponse, selectError } from './selectors';
 import s from '../Styles';
 import Select from 'react-select';
@@ -288,7 +288,7 @@ alapján műszaki szakértő állapíthatja meg." */}
       this.setState({ alertShown: true });
       window.alert('Hiba történt!');
     }
-    if (true) {
+    if (!loading) {
       return (
         <div>
           <Helmet
@@ -353,7 +353,7 @@ NewItemPage.propTypes = {
 const mapStateToProps = (state) => createStructuredSelector({
     cars: allCars(),
     workers: allWorkers(),
-    loading: selectLoading(),
+    loading: makeSelectLoading(),
     response: selectResponse(),
     error: selectError(),
     user: getUser(),

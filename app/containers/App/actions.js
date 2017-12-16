@@ -34,6 +34,7 @@ import {
   NEW_WORKER_ADDED,
   CARS_LOADED,
   WORKERS_LOADED,
+  SET_LOCATION_HELPER,
 } from './constants';
 
 export function loadWorkersData() {
@@ -134,5 +135,10 @@ export const carsLoaded = (cars) => ({
 export const workersLoaded = (workers) => ({
   type: WORKERS_LOADED,
   workers,
+})
+
+export const setLocationHelper = (location) => ({
+  type: SET_LOCATION_HELPER,
+  location,
 })
 

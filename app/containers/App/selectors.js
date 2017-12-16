@@ -13,7 +13,7 @@ const makeSelectCurrentUser = () => createSelector(
 
 const makeSelectLoading = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('loading')
+  (globalState) => globalState.getIn('loading')
 );
 
 const makeSelectError = () => createSelector(
@@ -61,6 +61,11 @@ const getCars = () => createSelector(
   (globalState) => globalState.getIn('cars')
 );
 
+const getSavedLocation = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn('location')
+);
+
 const makeSelectLocationState = () => {
   let prevRoutingState;
   let prevRoutingStateJS;
@@ -90,4 +95,6 @@ export {
   getOwnCompanyData,
   getWorkers,
   getCars,
+  getError,
+  getSavedLocation,
 };

@@ -397,7 +397,7 @@ SelectedCar.propTypes = {
 
 const mapStateToProps = (state) => createStructuredSelector({
   error: selectError(),
-  loading: selectLoading(),
+  loading: makeSelectLoading(),
   selectedCarDetails: selectCarDetails(),
   allRoutes: selectAllRoutes(),
   cars: getCars(),

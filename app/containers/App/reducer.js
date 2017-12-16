@@ -31,6 +31,7 @@ import {
   NEW_WORKER_ADDED,
   CARS_LOADED,
   WORKERS_LOADED,
+  SET_LOCATION_HELPER,
 } from './constants';
 
 // The initial state of the App
@@ -97,26 +98,31 @@ function appReducer(state = initialState, action) {
         .setIn('user', null);
     case GET_COMPANY_DATA:
       return state
-        .set('loading', false)
-        .set('error', false)
-        .setIn('companyData', null);
+      .set('error', false)
+      .set('companyData', null)
+      .setIn('loading', true);
     case GET_COMPANY_DATA_SUCCESS:
       return state
-        .set('loading', false)
+        .setIn('loading', false)
         .set('error', false)
         .set('workers', action.workers)
         .setIn('companyData', action.companyData);
     case GET_COMPANY_DATA_ERROR:
       return state
-        .set('loading', false)
+        .setIn('loading', false)
         .set('error', false)
         .setIn('companyData', null);
     case CARS_LOADED:
       return state
+        .setIn('loading', false)
         .setIn('cars', action.cars)
     case WORKERS_LOADED:
       return state
+        .setIn('loading', false)
         .setIn('workers', action.workers)
+    case SET_LOCATION_HELPER: 
+      return state
+        .setIn('location', action.location)
     case NEW_CAR_ADDED:
       return Object.assign({}, state, {
         cars: [

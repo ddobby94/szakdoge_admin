@@ -12,7 +12,9 @@ import s from '../Styles';
 import * as firebase from "firebase";
 import { setUserToken, getUserData, getCompanyData } from '../App/actions';
 import { getToken, getUser, error, getOwnCompanyData } from '../App/selectors';
-import API from '../../Api'
+import API from '../../Api';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 const realApi = API.create()
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
@@ -47,6 +49,7 @@ class SelectedCar extends React.PureComponent {
   componentWillReceiveProps({ user, companyData }) {
     
     if (user && roles[user.role]) {
+      cookies.set('UID', user.uid);
       this.props.getCompanyData(user.uid);
       this.props.router.push('/workers');
     }
@@ -65,27 +68,6 @@ class SelectedCar extends React.PureComponent {
       this.setState({ signInError: '', clickAble: true });
     })
     .catch(e => this.setState({ signInError: e.message, clickAble: true }));
-  }
-
-  register() {
-    const { email, pass } = this.state;
-    const auth = firebase.auth();
-    const promise = auth.createUserWithEmailAndPassword(email, pass).then( e => this.postSthToDB(e)).catch(e => console.log('error', e));
-  }
-
-  logout() {
-    firebase.auth().signOut();
-  }
-
-  pwdReset() {
-    var user = firebase.auth().currentUser;
-    var newPassword = getASecureRandomPassword();
-    
-    user.updatePassword(newPassword).then(function() {
-      // Update successful.
-    }).catch(function(error) {
-      // An error happened.
-    });
   }
 
   render() {
@@ -140,3 +122,27 @@ export function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectedCar);
+
+/*
+  register() {
+    const { email, pass } = this.state;
+    const auth = firebase.auth();
+    const promise = auth.createUserWithEmailAndPassword(email, pass).then( e => this.postSthToDB(e)).catch(e => console.log('error', e));
+  }
+
+  logout() {
+    firebase.auth().signOut();
+  }
+
+  pwdReset() {
+    var user = firebase.auth().currentUser;
+    var newPassword = getASecureRandomPassword();
+    
+    user.updatePassword(newPassword).then(function() {
+      // Update successful.
+    }).catch(function(error) {
+      // An error happened.
+    });
+  }
+
+*/

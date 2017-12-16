@@ -32,11 +32,14 @@ class SelectedWorker extends React.PureComponent {
     super(props);
     const d = new Date();
     const workerId = props.location.query.id;
-    const workerDetails = props.workers[workerId];
+    let workerDetails = null;
+    if (props.workers) {
+      workerDetails = props.workers[workerId];
+    }
     this.state = {
       visibleBasicDatas: true,
       visibleRoutes: true,
-      workerId: props.location.query.id,
+      workerId,
       workerDetails,
       showBasicDatas: true,
       showPreviousRoutes: true,
@@ -47,6 +50,13 @@ class SelectedWorker extends React.PureComponent {
     };
    
     this.workerSubmit = this.workerSubmit.bind(this);
+  }
+
+  componentWillReceiveProps({ workers }) {
+    if (!this.state.workerDetails) {
+      let workerDetails = workers[this.state.workerId];
+      this.setState({ workerDetails });
+    }
   }
 
   getBasicDatas() {
@@ -291,7 +301,7 @@ SelectedWorker.propTypes = {
 
 const mapStateToProps = (state) => createStructuredSelector({
     error: selectError(),
-    loading: selectLoading(),
+    loading: makeSelectLoading(),
     selectedWorkerDetails: selectWorkerDetails(),
     allRoutes: selectAllRoutes(),
     workers: getWorkers(),

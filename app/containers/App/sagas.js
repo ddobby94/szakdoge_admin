@@ -37,6 +37,9 @@ export function* getUserDatas(action) {
 
 export function* getCompanyDatas(action) {
   const { uid } = action
+  console.log('************************************************************')
+  console.log('getcompany called!!')
+  console.log('************************************************************')
   try {
     const response = yield call(realApi.getCompanyData, uid)
     console.log('getCompanyData resp', response)
@@ -44,7 +47,7 @@ export function* getCompanyDatas(action) {
       const data = response.data;
       yield put(carsLoaded(data.cars));
       yield put(workersLoaded(data.workers));
-        yield put(getCompanyDataSuccess(data));
+      yield put(getCompanyDataSuccess(data));
     } else {
         throw response;
     }

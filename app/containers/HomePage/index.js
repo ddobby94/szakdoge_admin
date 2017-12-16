@@ -102,6 +102,7 @@ export class HomePage extends React.PureComponent {
 
   render() {
     const { loading, error, companyData, location } = this.props;
+    console.log('homepage loading: ', loading, 'home page comp data: ', companyData)
     if ( !loading && companyData) {
       const { workers } = companyData;
       console.log(workers,'workers', companyData, 'companyData')
