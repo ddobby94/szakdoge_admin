@@ -135,17 +135,37 @@ class SelectedWorker extends React.PureComponent {
       let startIsSmallerThanEnd = true;
       if (start !== end && start < end) {
         filteredRoutes = allRoutes.filter( v => {
-          console.log('V', v)
           let d = new Date(v.date).getTime()
-          console.log('V.date :', d)          
           return end >= d && d >= start
         })
       } else if (start > end) {
         startIsSmallerThanEnd = false;
       }
-      const data = startIsSmallerThanEnd ? setData(filteredRoutes) : [{}];
-      console.log('START,', start)
-      console.log('end,', end)
+      const data = setData(filteredRoutes);
+      if (!data[0]) {
+        return (
+          <div>
+             { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
+            <div style={s.datePickerComponents}>
+              <h4>START</h4>
+              <h4>END</h4>
+            </div>
+            <div style={s.datePickerComponents}>
+              <DatePicker
+                selected={this.state.startDate}
+                onChange={(date) => this.setState({ startDate: date})}
+              />
+              <DatePicker
+                selected={this.state.endDate}
+                onChange={(date) => this.setState({ endDate: date})}
+              />
+            </div>
+            <div>
+              <h2>Nincs korábbi út a kiválasztott időszakban!</h2>
+            </div>
+          </div>
+        );
+      }
       return (
         <div>
           { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
@@ -172,16 +192,14 @@ class SelectedWorker extends React.PureComponent {
             showDropDown={false}
             sortByDates={true}
           />
-          {data && startIsSmallerThanEnd && (<div 
-            onClick={() => this.saveDataTable(data)}
-            style={{ 
-              width: 200,
-              height: 200,
-              backgroundColor: 'rgba(160,40,100,0.7)'
-            }}
-          >
-            SAVE DATATABLE!!!
-          </div>)}
+          {data && startIsSmallerThanEnd && (
+            <Button 
+              onClick={() => this.saveDataTable(data)}
+              style={{ margin: 20 }}
+            >
+              ADATOK KIEXPORTÁLÁSA EXCELBE
+            </Button>
+          )}
         </div>
       );
     } else {

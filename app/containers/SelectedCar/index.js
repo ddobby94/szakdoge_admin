@@ -16,6 +16,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 import { makeSelectLoading, makeSelectError, getOwnCompanyData, getCars } from '../App/selectors';
+import { generateXLSX } from '../../utils/excelHelper';
 const contentWidthPercentage = 60;
 const contentMarginLeft = window.innerWidth * contentWidthPercentage / 300;
 
@@ -28,24 +29,45 @@ class SelectedCar extends React.PureComponent {
   constructor(props) {
     super(props);
     const carId = props.location.query.id;
-    const carDetails = props.cars[carId];
+    let carDetails = null;
+    let licence_plate = 'AAA-000';
+    if (props.cars) {
+      carDetails = props.cars[carId];
+      licence_plate =  carDetails.licence_plate;
+    }
+    const d = new Date();
     this.state = {
       visibleBasicDatas: true,
       visibleRoutes: true,
       carId,
       selectedCarDetails: {
         ...carDetails,
-        licence_plate1: carDetails.licence_plate.split('-')[0],
-        licence_plate2: carDetails.licence_plate.split('-')[1],
+        licence_plate,
+        licence_plate1: licence_plate.split('-')[0],
+        licence_plate2: licence_plate.split('-')[1],
       },
       showBasicDatas: true,
       showPreviousRoutes: true,
       allRoutes: [],
       editDatas: false,
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: moment(d),
+      endDate: moment(d),
     };
     this.carSubmit = this.carSubmit.bind(this);
+  }
+
+  componentWillReceiveProps({ cars }) {
+    if (!this.state.selectedCarDetails.type) {
+      let selectedCarDetails = cars[this.state.carId];
+      this.setState({ 
+        selectedCarDetails: {
+          ...selectedCarDetails,
+          licence_plate: selectCarDetails.licence_plate,
+          licence_plate1: selectedCarDetails.licence_plate.split('-')[0],
+          licence_plate2: selectedCarDetails.licence_plate.split('-')[1],
+        },
+      });
+    }
   }
 
   getBasicDatas() {
@@ -264,21 +286,48 @@ class SelectedCar extends React.PureComponent {
     const { location } = this.props;
     const allRoutes = this.state.selectedCarDetails.routes;
     if (allRoutes) {
-      const start = moment.unix(this.state.startDate) * 1000;
-      const end = moment.unix(this.state.endDate) * 1000;
+      const start = moment(this.state.startDate).unix() * 1000;
+      const end = moment(this.state.endDate).unix() * 1000;
       
       let filteredRoutes = allRoutes;
       let startIsSmallerThanEnd = true;
       if (start !== end && start < end) {
         filteredRoutes = allRoutes.filter( v => {
+          console.log('V', v)
           let d = new Date(v.date).getTime()
-          return d < end && d > start
+          console.log('V.date :', d)          
+          return end >= d && d >= start
         })
-      } else if (start < end) {
+      } else if (start > end) {
         startIsSmallerThanEnd = false;
       }
-      const data = setData(filteredRoutes)
-
+      console.log(start, '<--start, end-->', end);
+      
+      const data = setData(filteredRoutes);
+      if (!data[0]) {
+        return (
+          <div>
+             { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
+            <div style={s.datePickerComponents}>
+              <h4>START</h4>
+              <h4>END</h4>
+            </div>
+            <div style={s.datePickerComponents}>
+              <DatePicker
+                selected={this.state.startDate}
+                onChange={(date) => this.setState({ startDate: date})}
+              />
+              <DatePicker
+                selected={this.state.endDate}
+                onChange={(date) => this.setState({ endDate: date})}
+              />
+            </div>
+            <div>
+              <h2>Nincs korábbi út a kiválasztott időszakban!</h2>
+            </div>
+          </div>
+        );
+      }
       return (
         <div>
           { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
@@ -303,6 +352,14 @@ class SelectedCar extends React.PureComponent {
             showDropDown={false}
             sortByDates={true}
           />
+            {data && startIsSmallerThanEnd && (
+            <Button 
+              onClick={() => this.saveDataTable(data)}
+              style={{ margin: 20 }}
+            >
+              ADATOK KIEXPORTÁLÁSA EXCELBE
+            </Button>
+          )}
         </div>
       );
     } else {
@@ -313,6 +370,14 @@ class SelectedCar extends React.PureComponent {
       );
     }
   }
+
+  saveDataTable(filteredRoutes) {
+    const start = moment(this.state.startDate).format("YYYY.M.DD.");
+    const end = moment(this.state.endDate).format("YYYY.M.DD.");
+    const { selectedCarDetails } = this.state;
+    generateXLSX(selectedCarDetails, filteredRoutes, start, end, 'car');
+  }
+
 
   render() {
     const { loading, error } = this.props;

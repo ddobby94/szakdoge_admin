@@ -3,16 +3,23 @@ import Helmet from 'react-helmet';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { postNewCar, postNewWorker } from './actions';
+
 import H2 from 'components/H2';
 import CenteredSection from '../HomePage/CenteredSection';
-import { loadCars } from '../App/actions';
-import { allCars,  allWorkers, getOwnCompanyData, makeSelectLoading } from '../App/selectors';
-import { selectLoading, selectResponse, selectError } from './selectors';
+import { loadCars, postNewCar, postNewWorker } from '../App/actions';
+import { 
+  allCars,
+  allWorkers,
+  getOwnCompanyData,
+  makeSelectLoading,
+  getUser,
+  selectResponse,
+  getError,
+} from '../App/selectors';
+import { selectLoading } from './selectors';
 import s from '../Styles';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import { getUser } from '../App/selectors';
 import * as firebase from "firebase";
 import { getConsumptionNorm } from '../../utils/RoutesData';
 
@@ -173,7 +180,7 @@ alapján műszaki szakértő állapíthatja meg." */}
         type,
         year,
         performance_hp,
-        consuptionNorm,
+        consuption_norm,
         fuelType: fuelType.value,
         color,
         licence_plate: licence_plate1 + '-' + licence_plate2,
@@ -355,7 +362,7 @@ const mapStateToProps = (state) => createStructuredSelector({
     workers: allWorkers(),
     loading: makeSelectLoading(),
     response: selectResponse(),
-    error: selectError(),
+    error: getError(),
     user: getUser(),
     companyData: getOwnCompanyData(),
 });

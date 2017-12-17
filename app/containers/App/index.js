@@ -38,18 +38,18 @@ const checkCookies = ({
   const currentLoc = router.getCurrentLocation();
   if (!UID && currentLoc.pathname !== '/') {
     router.push('/');
-  } else if (!workers && !user && !error && !loading && !savedLocation) {
+  } else if (UID && !workers && !user && !error && !loading && !savedLocation) {
     // setLocationHelper(currentLoc);
     // router.push('/');
     getUserData(UID);
     getCompanyData(UID);
   }
-  console.log('heyyyyyyyy', savedLocation)
-  if (workers && user && savedLocation) {
-    console.log('heyyyyyyyy', savedLocation)
-    router.push(savedLocation);
-    setLocationHelper(null);
-  }
+  console.log('heyyyyyyyy11', savedLocation)
+  // if (workers && user && savedLocation) {
+  //   console.log('heyyyyyyyy', savedLocation)
+  //   router.push(savedLocation);
+  //   setLocationHelper(null);
+  // }
 }
 
 export function App(props) {

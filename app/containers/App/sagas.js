@@ -4,7 +4,12 @@
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { GET_USER_DATAS, GET_COMPANY_DATA } from './constants';
+import { 
+  GET_USER_DATAS,
+  GET_COMPANY_DATA,
+  POST_NEW_CAR,
+  POST_NEW_WORKER,
+} from './constants';
 import {
   getUserDataSuccess,
   getUserDataError,
@@ -13,6 +18,11 @@ import {
   carsLoaded,
   workersLoaded,
   newWorkerAdded,
+  postNewWorkerSuccess,
+  postNewWorkerFailure,
+  postNewCarSuccess,
+  postNewCarFailure,
+  newCarAdded,
 } from './actions';
 
 import API from '../../Api'
@@ -37,9 +47,6 @@ export function* getUserDatas(action) {
 
 export function* getCompanyDatas(action) {
   const { uid } = action
-  console.log('************************************************************')
-  console.log('getcompany called!!')
-  console.log('************************************************************')
   try {
     const response = yield call(realApi.getCompanyData, uid)
     console.log('getCompanyData resp', response)
@@ -56,9 +63,38 @@ export function* getCompanyDatas(action) {
   }
 }
 
+export function* addNewCar(action) {
+  const { id, data, company } = action
+  
+  try {
+    const response = yield call(realApi.addNewCar, company, id, data);
+    yield put(newCarAdded(data));
+    yield put(postNewCarSuccess(response));
+  } catch (err) {
+    yield put(postNewCarFailure(err));
+  }
+}
+
+export function* addNewWorker(action) {
+    const { data } = action
+    try {
+        const response = yield call(realApi.setUserData, data);
+        if (response.ok) {
+          yield put (newWorkerAdded(data));
+          yield put(postNewWorkerSuccess(response));
+        } else {
+          throw response;
+        }
+    } catch (err) {
+      yield put(postNewWorkerFailure(err));
+    }
+  }
+
 export function* connectSagas() {
   yield takeLatest(GET_USER_DATAS, getUserDatas);
   yield takeLatest(GET_COMPANY_DATA, getCompanyDatas);
+  yield takeLatest(POST_NEW_CAR, addNewCar);
+  yield takeLatest(POST_NEW_WORKER, addNewWorker);
 }
 
 export default [

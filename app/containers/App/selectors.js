@@ -66,6 +66,12 @@ const getSavedLocation = () => createSelector(
   (globalState) => globalState.getIn('location')
 );
 
+const selectResponse = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn('response')
+);
+
+
 const makeSelectLocationState = () => {
   let prevRoutingState;
   let prevRoutingStateJS;
@@ -97,4 +103,5 @@ export {
   getCars,
   getError,
   getSavedLocation,
+  selectResponse,
 };
