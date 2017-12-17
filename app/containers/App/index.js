@@ -53,9 +53,10 @@ const checkCookies = ({
 }
 
 export function App(props) {
-  const { user, loading } = props;
+  const { user, loading, router } = props;
   const currentLoc = props.router.getCurrentLocation();
   checkCookies(props);
+  const UID = cookies.get('UID');
   // if (loading) {
   //   return (
   //     <AppWrapper>
@@ -79,9 +80,9 @@ export function App(props) {
           { name: 'description', content: 'A React.js Boilerplate application' },
         ]}
       />
-      {user && <Header user={user} />}
+      {(user && UID) && <Header user={user} router={router} />}
       {React.Children.toArray(props.children)}
-      {user && <Footer />}
+      {(user && UID) && <Footer />}
     </AppWrapper>
   );
 }

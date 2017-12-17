@@ -29,6 +29,7 @@ const newCarButtonContainerStyle = {
   display: "flex",
   flexDirecton: "row",
   justifyContent: "flex-end",
+  margin: 20,
 }
 
 const addNewCarButton = {

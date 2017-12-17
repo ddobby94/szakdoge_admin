@@ -77,7 +77,10 @@ const styles = {
     paddingTop: '20px',
     borderRadius: 5,
     color: 'rgb(150, 10, 10)',
-  }
+  },
+  addNewItemStyle: {
+    margin: 30,
+  },
 };
 
 export default styles;
