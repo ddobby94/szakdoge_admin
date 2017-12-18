@@ -284,7 +284,12 @@ class SelectedCar extends React.PureComponent {
 
   getRoutesTable(){
     const { location } = this.props;
-    const allRoutes = this.state.selectedCarDetails.routes;
+    let allRoutes = [];
+    const routeObj = this.state.selectedCarDetails.routes;
+    for (let keys in routeObj) {
+      console.log(routeObj[keys])
+      allRoutes.push(routeObj[keys]);
+    }
     if (allRoutes) {
       const start = moment(this.state.startDate).unix() * 1000;
       const end = moment(this.state.endDate).unix() * 1000;

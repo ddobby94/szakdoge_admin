@@ -127,7 +127,11 @@ class SelectedWorker extends React.PureComponent {
 
   getRoutesTable() {
     const { location } = this.props;
-    const allRoutes = this.state.workerDetails.routes;
+    let allRoutes = [];
+    const routeObj = this.state.workerDetails.routes;
+    for (let keys in routeObj) {
+      allRoutes.push(routeObj[keys]);
+    }
     if (allRoutes) {
       const start = moment(this.state.startDate).unix() * 1000;
       const end = moment(this.state.endDate).unix() * 1000;

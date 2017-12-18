@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const setData = (data) => {
   return data.map( val => {
     if (!val) {
@@ -9,8 +11,7 @@ export const setData = (data) => {
     }
     val.from = from.zip + ' ' + from.city + ' ' + from.address + ' ' + from.house_number;
     val.to =  to.zip + ' ' + to.city + ' ' + to.address + ' ' + to.house_number;
-    let d = new Date(val.date);
-    val.date = d.getFullYear() + '.' + d.getMonth()+ '.' + d.getDate();
+    val.date = moment(val.date).format('YYYY.MM.DD.')
     return val;
   });
 }
