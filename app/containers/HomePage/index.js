@@ -11,7 +11,7 @@ import { Link } from 'react-router';
 import HeaderLink from 'components/Header/HeaderLink';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { makeSelectLoading, makeSelectError, getOwnCompanyData, getWorkers } from '../App/selectors';
+import { makeSelectLoading, makeSelectError, getOwnCompanyData, getWorkers, getUser } from '../App/selectors';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 import DataTable from 'components/DataTable'
@@ -102,8 +102,24 @@ export class HomePage extends React.PureComponent {
   }
 
   render() {
-    const { loading, error, companyData, location } = this.props;
+    const { loading, error, companyData, location, user } = this.props;
     console.log('homepage loading: ', loading, 'home page comp data: ', companyData)
+    console.log('******', user, '********')
+    if (!loading && user.role === 'owner') {
+      return (
+        <div>
+          <Helmet
+            title="Home Page"
+            meta={[
+              { name: 'description', content: 'A React.js Boilerplate application homepage' },
+            ]}
+          />
+          <div>
+            {this.renderAddWorkersButton()}
+          </div>
+        </div>
+      );
+    }
     if ( !loading && companyData) {
       const { workers } = companyData;
       console.log(workers,'workers', companyData, 'companyData')
@@ -174,6 +190,7 @@ const mapStateToProps = (state) => createStructuredSelector({
   error: makeSelectError(),
   companyData: getOwnCompanyData(),
   workers: getWorkers(),
+  user: getUser(),
 });
 
 export function mapDispatchToProps(dispatch) {
