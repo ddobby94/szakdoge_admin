@@ -8,10 +8,10 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   home: {
     id: 'boilerplate.components.Header.home',
-    defaultMessage: 'Dolgozók',
+    defaultMessage: 'ALKALMAZOTTAK',
   },
   cars: {
     id: 'boilerplate.components.Header.cars',
-    defaultMessage: 'Autók',
+    defaultMessage: 'AUTÓK',
   },
 });

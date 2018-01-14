@@ -19,18 +19,18 @@ class CarsPage extends React.PureComponent {
 
   renderAddCarsButton() {
     return(
-      <div style={s.newCarButtonContainerStyle}>
-        <HeaderLink to='new?new=car' >
-          <p id='newWorker'> ÚJ AUTÓ HOZZÁADÁSA</p>
-        </HeaderLink>
-      </div>
+      <CenteredSection >
+        <Link to='new?new=car' >
+          <div style={s.submitButton}>ÚJ AUTÓ HOZZÁADÁSA</div>
+        </Link>
+      </CenteredSection>
     );
   }
 
   render() {
     const { loading, error, cars, location } = this.props;
     console.log('cars,',cars)
-    if (!loading && cars) {
+    if (!loading) {
       return (
         <div>
           <Helmet
@@ -40,8 +40,13 @@ class CarsPage extends React.PureComponent {
             ]}
           />
           <div>
+            <div style={s.dataTableTitleContainer}>
+              <h3>AZ AUTÓK ADATAI: </h3>
+              <p>Az egyes sorokra kattintva lehet megnézni az autók részeletes adatait. </p>
+            </div>
+            {cars && <DataTable data={cars} mainHeaderName={'AUTÓK'} location={location} />}
+            {!cars && <H2>NINCS AUTÓ A RENDSZERBEN!</H2>}
             {this.renderAddCarsButton()}
-            <DataTable data={cars} mainHeaderName={'AUTÓK'} location={location} />
           </div>
         </div>
       );

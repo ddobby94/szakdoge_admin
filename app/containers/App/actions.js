@@ -128,9 +128,10 @@ export const newCarAdded = (newCar) => ({
   newCar,
 })
 
-export const newWorkerAdded = (newWorker) => ({
+export const newWorkerAdded = (newWorker, compData) => ({
   type: NEW_WORKER_ADDED,
   newWorker,
+  compData,
 })
 
 export const carsLoaded = (cars) => ({
@@ -171,17 +172,19 @@ export function postNewCarFailure(error) {
   };
 }
 
-export function postNewWorker(data) {
+export function postNewWorker(data, compData) {
   return {
     type: POST_NEW_WORKER,
     data,
+    compData,
   };
 }
 
-export function postNewWorkerSuccess(response) {
+export function postNewWorkerSuccess(response, compData) {
   return {
     type: POST_NEW_WORKER_SUCCESS,
     response,
+    compData,
   };
 }
 export function postNewWorkerFailure(error) {

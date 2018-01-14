@@ -24,7 +24,7 @@ export function* addNewCar(action) {
   try {
     const response = yield call(realApi.addNewCar, company, id, data);
     yield put(newCarAdded(data));
-    yield put(postNewCarSuccess(response));
+    // yield put(postNewCarSuccess(response));
   } catch (err) {
     yield put(postNewCarFailure(err));
   }
@@ -32,12 +32,14 @@ export function* addNewCar(action) {
 
 
 export function* addNewWorker(action) {
-    const { data } = action
+    const { data, compData } = action
     try {
+      console.log('saga comp', compData)
         const response = yield call(realApi.setUserData, data);
         if (response.ok) {
-          yield put (newWorkerAdded(data));
-          yield put(postNewWorkerSuccess(response));
+          consol.log()
+          yield put(newWorkerAdded(data, compData));
+          // yield put(postNewWorkerSuccess(response));
         } else {
           throw response;
         }

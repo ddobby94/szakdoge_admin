@@ -16,6 +16,8 @@ import H1 from 'components/H1';
 import H2 from 'components/H2';
 import DataTable from 'components/DataTable'
 import CenteredSection from './CenteredSection';
+import s from '../Styles';
+// import { Link } from 'react-router';
 
 const divLineStyle = {
   borderBottomWidth: "10px",
@@ -49,55 +51,13 @@ const rowStyle = {
 
 export class HomePage extends React.PureComponent {
 
-  renderAllUsers() {
-    const { workers } = this.props;
-    return workers.map( val => {
-      return(
-        <Link to={'selectedWorker?id=' + val.workerId}>
-          <div
-            key={val.workerId}
-            style={divLineStyle}
-          >
-            <H2 style={rowStyle}>
-              {val.name}
-            </H2>
-            <H2 style={rowStyle}>
-              {val.position}
-            </H2>
-            <H2 style={rowStyle}>
-              {val.email}
-            </H2>
-          </div>
-        </Link>
-      );
-    })
-  }
-
-  renderTableHeader() {
-    return(
-      <div
-        style={divLineStyle}
-      >
-        <H1 style={{}}>
-          NÉV
-        </H1>
-        <H1 style={{}}>
-          POZÍCIÓ
-        </H1>
-        <H1 style={{}}>
-          EMAIL CÍM
-        </H1>
-      </div>
-    );
-  }
-
   renderAddWorkersButton() {
     return(
-      <div style={newCarButtonContainerStyle}>
-        <HeaderLink to='new?new=worker' >
-          <p id='newWorker'> ÚJ ALKALMAZOTT HOZZÁADÁSA</p>
-        </HeaderLink>
-      </div>
+      <CenteredSection style={{ alignItems: 'center' }}>
+        <Link to='new?new=worker' >
+          <div style={s.submitButton}>ÚJ ALKALMAZOTT HOZZÁADÁSA</div>
+        </Link>
+      </CenteredSection>
     );
   }
 
@@ -132,8 +92,12 @@ export class HomePage extends React.PureComponent {
             ]}
           />
           <div>
-            {this.renderAddWorkersButton()}
+            <div style={s.dataTableTitleContainer}>
+              <h3>AZ ALKALMAZOTTAK ADATAI: </h3>
+              <p>Az egyes sorokra kattintva lehet megnézni az alkalmazottak részeletes adatait. </p>
+            </div>
             <DataTable data={workers} mainHeaderName={'ALKALMAZOTTAK'} location={location} />
+            {this.renderAddWorkersButton()}
           </div>
         </div>
       );

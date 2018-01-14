@@ -39,7 +39,7 @@ class SelectedCar extends React.PureComponent {
     this.state = {
       // pass: 'superSecret123',
       // email: 'dobisz_david@windowslive.com',
-      pass: 'Secret123',
+      pass: 'Secret1234',
       email: 'mail@mail.com',
       signInError: '',
       clickAble: true,
@@ -52,6 +52,8 @@ class SelectedCar extends React.PureComponent {
       cookies.set('UID', user.uid);
       this.props.getCompanyData(user.uid);
       this.props.router.push('/workers');
+    } else if(user && user.role === 'user') {
+      this.setState({ signInError: 'Nincs jogosultsága belépni az adminisztrációs felületre!' })
     }
   }
 
@@ -80,22 +82,21 @@ class SelectedCar extends React.PureComponent {
             { name: 'description', content: 'Útnyílvántartó admin felület' },
           ]}
         />
-        <div>
-          <CenteredSection>
-            <H2>EMAIL</H2>
-            <input 
-              type="text" value={this.state.email} style={s.inputStyle}
-              onChange={(e) => this.setState({ email: e.target.value })} 
-            />
-            <H2>JELSZÓ</H2>
-            <input 
-              type="password" value={this.state.pass} style={s.inputStyle}
-              onChange={(e) => this.setState({ pass: e.target.value })} 
-            />
-            <div style={s.submitButton} onClick={() => this.signIn()}> BEJELENTKEZÉS </div>
-            <h3 style={s.errorMsg}>{signInError}</h3>
-          </CenteredSection>
-        </div>
+        <CenteredSection>
+          <H1>ÚTNYÍLVÁNTARTÓ ALKALAMAZÁS ADMINISZTRÁCIÓS FELÜLET</H1>
+          <H2>EMAIL</H2>
+          <input 
+            type="text" value={this.state.email} style={s.inputStyle}
+            onChange={(e) => this.setState({ email: e.target.value })} 
+          />
+          <H2>JELSZÓ</H2>
+          <input 
+            type="password" value={this.state.pass} style={s.inputStyle}
+            onChange={(e) => this.setState({ pass: e.target.value })} 
+          />
+          <div style={s.submitButton} onClick={() => this.signIn()}> BEJELENTKEZÉS </div>
+          <h3 style={s.errorMsg}>{signInError}</h3>
+        </CenteredSection>
       </div>
     );
   }
@@ -122,27 +123,3 @@ export function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectedCar);
-
-/*
-  register() {
-    const { email, pass } = this.state;
-    const auth = firebase.auth();
-    const promise = auth.createUserWithEmailAndPassword(email, pass).then( e => this.postSthToDB(e)).catch(e => console.log('error', e));
-  }
-
-  logout() {
-    firebase.auth().signOut();
-  }
-
-  pwdReset() {
-    var user = firebase.auth().currentUser;
-    var newPassword = getASecureRandomPassword();
-    
-    user.updatePassword(newPassword).then(function() {
-      // Update successful.
-    }).catch(function(error) {
-      // An error happened.
-    });
-  }
-
-*/

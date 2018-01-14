@@ -73,98 +73,99 @@ class SelectedCar extends React.PureComponent {
   getBasicDatas() {
     const { selectedCarDetails } = this.state;
     return (
-      <div style={basicDataContainer}>
-        <div style={s.lineComponent}>
-          <H2>MÁRKA:</H2>
-          <input 
-            type="text" style={this.getInputStyle()} 
-            disabled={!this.state.editDatas}
-            value={selectedCarDetails.brand}
-            onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, brand: event.target.value }})}
-          />
-        </div>
-        <div style={s.lineComponent}>
-          <H2>TÍPUS:</H2>
-          <input 
-            type="text" style={this.getInputStyle()} 
-            disabled={!this.state.editDatas}
-            value={selectedCarDetails.type}
-            onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, type: event.target.value }})}
-          />
-        </div>
-        <div style={s.lineComponent}>
-          <H2>HENGERŰRTARTALOM:</H2>
-          <input 
-            type="text" style={this.getInputStyle()} 
-            disabled={!this.state.editDatas}
-            value={selectedCarDetails.cylinder_capacity}
-            onChange={(event) => this.setState({ selectedCarDetails: { ...selectedCarDetails, cylinder_capacity: event.target.value }})}
-          />
-        </div>
-        <div style={s.lineComponent}>
-          <H2>SAJÁT TÖMEG (kg):</H2>
-          <input 
-            type="text" style={this.getInputStyle()}
-            disabled={!this.state.editDatas}
-            value={selectedCarDetails.own_weight_kg}
-            onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, own_weight_kg: event.target.value }})}
-          />
-        </div>
-        <div style={s.lineComponent}>
-          <H2>ÉVJÁRAT:</H2>
-          <input
-            type="text" style={this.getInputStyle()}
-            disabled={!this.state.editDatas}
-            value={selectedCarDetails.year}
-            onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, year: event.target.value }})}
-          />
-        </div>
-        <div style={s.lineComponent}>
-          <H2>ÜZEMANYAG TÍPUSA:</H2>
-          <input 
-            type="text" style={this.getInputStyle()}
-            disabled={!this.state.editDatas}
-            value={selectedCarDetails.is_it_diesel?  'DÍZEL' : 'BENZIN'}
-            onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, is_it_diesel: event.target.value }})}
-          />
-        </div>
-        <div style={s.lineComponent}>
-          <H2>SZÍN:</H2>
-          <input
-            type="text" style={this.getInputStyle()}
-            disabled={!this.state.editDatas}
-            value={selectedCarDetails.color}
-            onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, color: event.target.value }})}
-          />
-        </div>
-        <div style={s.lineComponent}>
-          <H2>TELJESÍTMÉNY (lóerő):</H2>
-          <input
-            type="text" style={this.getInputStyle()}
-            disabled={!this.state.editDatas}
-            value={selectedCarDetails.performance_hp}
-            onChange={(event) =>  this.setState({ selectedCarDetails: { ...selectedCarDetails, performance_hp: event.target.value } })}
-          />
-        </div>
-        <div style={s.lineComponent}>
-          <H2>RENDSZÁM:</H2>
-          <div style={s.rowFlexSpaceAround}>
-            <input
-              type="text" style={this.getInputStyle()}
-              value={selectedCarDetails.licence_plate1}
-              onChange={(event) => this.setLicencePlate(event.target.value, 'letters')} 
+      <div style={s.basicDatasWrapperCars}>
+        <div style={s.flexColumn}>
+          <div style={s.lineComponent}>
+            <h4>MÁRKA:</h4>
+            <input 
+              type="text" style={this.getInputStyle()} 
+              disabled={!this.state.editDatas}
+              value={selectedCarDetails.brand}
+              onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, brand: event.target.value }})}
             />
-            <H2>-</H2>
-            <input
+          </div>
+          <div style={s.lineComponent}>
+            <h4>TÍPUS:</h4>
+            <input 
+              type="text" style={this.getInputStyle()} 
+              disabled={!this.state.editDatas}
+              value={selectedCarDetails.type}
+              onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, type: event.target.value }})}
+            />
+          </div>
+          <div style={s.lineComponent}>
+            <h4>HENGERŰRTARTALOM:</h4>
+            <input 
+              type="text" style={this.getInputStyle()} 
+              disabled={!this.state.editDatas}
+              value={selectedCarDetails.cylinder_capacity}
+              onChange={(event) => this.setState({ selectedCarDetails: { ...selectedCarDetails, cylinder_capacity: event.target.value }})}
+            />
+          </div>
+          <div style={s.lineComponent}>
+            <h4>SAJÁT TÖMEG (kg):</h4>
+            <input 
               type="text" style={this.getInputStyle()}
-              value={selectedCarDetails.licence_plate2}
-              onChange={(event) => this.setLicencePlate(event.target.value, 'numbers')}
+              disabled={!this.state.editDatas}
+              value={selectedCarDetails.own_weight_kg}
+              onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, own_weight_kg: event.target.value }})}
             />
           </div>
         </div>
-        <Button onClick={this.carSubmit} >
-          {this.state.editDatas? 'MENTÉS': 'ADATOK SZERKESZTÉSE'}
-        </Button>
+        <div style={s.flexColumn}>
+          <div style={s.lineComponent}>
+            <h4>ÉVJÁRAT:</h4>
+            <input
+              type="text" style={this.getInputStyle()}
+              disabled={!this.state.editDatas}
+              value={selectedCarDetails.year}
+              onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, year: event.target.value }})}
+            />
+          </div>
+          <div style={s.lineComponent}>
+            <h4>ÜZEMANYAG TÍPUSA:</h4>
+            <input 
+              type="text" style={this.getInputStyle()}
+              disabled={!this.state.editDatas}
+              value={selectedCarDetails.is_it_diesel?  'DÍZEL' : 'BENZIN'}
+              onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, is_it_diesel: event.target.value }})}
+            />
+          </div>
+          <div style={s.lineComponent}>
+            <h4>SZÍN:</h4>
+            <input
+              type="text" style={this.getInputStyle()}
+              disabled={!this.state.editDatas}
+              value={selectedCarDetails.color}
+              onChange={(event) =>  this.setState({selectedCarDetails: { ...selectedCarDetails, color: event.target.value }})}
+            />
+          </div>
+          <div style={s.lineComponent}>
+            <h4>TELJESÍTMÉNY (lóerő):</h4>
+            <input
+              type="text" style={this.getInputStyle()}
+              disabled={!this.state.editDatas}
+              value={selectedCarDetails.performance_hp}
+              onChange={(event) =>  this.setState({ selectedCarDetails: { ...selectedCarDetails, performance_hp: event.target.value } })}
+            />
+          </div>
+          <div style={s.lineComponent}>
+            <h4>RENDSZÁM:</h4>
+            <div style={s.rowFlexSpaceAround}>
+              <input
+                type="text" style={this.getInputStyle()}
+                value={selectedCarDetails.licence_plate1}
+                onChange={(event) => this.setLicencePlate(event.target.value, 'letters')} 
+              />
+              <h4>-</h4>
+              <input
+                type="text" style={this.getInputStyle()}
+                value={selectedCarDetails.licence_plate2}
+                onChange={(event) => this.setLicencePlate(event.target.value, 'numbers')}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -268,16 +269,14 @@ class SelectedCar extends React.PureComponent {
   getInputStyle() {
     if (this.state.editDatas) {
       return {
-        borderWidth: '2px',
-        height: '50px',
-        marginTop: '15px',
-        fontWeight: 'normal',
+        ...s.inputStyle,
+        width: 300,
       };
     }
     return {
       borderWidth: 0,
       height: '50px',
-      marginTop: '15px',
+      marginTop: '10px',
       fontWeight: 'bold',
     };
   }
@@ -314,8 +313,8 @@ class SelectedCar extends React.PureComponent {
           <div>
              { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
             <div style={s.datePickerComponents}>
-              <h4>START</h4>
-              <h4>END</h4>
+              <h4>KEZDETI DÁTUM</h4>
+              <h4>VÉG DÁTUM</h4>
             </div>
             <div style={s.datePickerComponents}>
               <DatePicker
@@ -337,8 +336,8 @@ class SelectedCar extends React.PureComponent {
         <div>
           { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
           <div style={s.datePickerComponents}>
-            <h4>START</h4>
-            <h4>END</h4>
+            <h4>KEZDETI DÁTUM</h4>
+            <h4>VÉG DÁTUM</h4>
           </div>
           <div style={s.datePickerComponents}>
             <DatePicker
@@ -357,13 +356,15 @@ class SelectedCar extends React.PureComponent {
             showDropDown={false}
             sortByDates={true}
           />
-            {data && startIsSmallerThanEnd && (
-            <Button 
-              onClick={() => this.saveDataTable(data)}
-              style={{ margin: 20 }}
-            >
-              ADATOK KIEXPORTÁLÁSA EXCELBE
-            </Button>
+           {data && startIsSmallerThanEnd && (
+            <CenteredSection>
+              <div 
+                style={s.submitButton} 
+                onClick={() => this.saveDataTable(data)}
+              > 
+                ADATOK KIEXPORTÁLÁSA EXCELBE 
+              </div>
+            </CenteredSection>
           )}
         </div>
       );
@@ -396,27 +397,19 @@ class SelectedCar extends React.PureComponent {
               { name: 'description', content: 'Útnyílvántartó admin felület' },
             ]}
           />
-          <div>
-            <CenteredSection>
-              <div 
-                style={s.clickAbleHeaderLine}
-                onClick={() => {this.setState({showBasicDatas: !showBasicDatas})}}
-              >
-                <h4> </h4>
-                <h4>AUTÓ ADATAI</h4>
-                <h4>{showBasicDatas? 'HIDE ME' : 'SHOW ME' }</h4>
-              </div>
+           <div style={s.basicDatasContainer}>
+              <h3>AUTÓ ADATAI</h3>
               {showBasicDatas && this.getBasicDatas()}
-              <div 
-                style={s.clickAbleHeaderLine}
-                onClick={() => {this.setState({showPreviousRoutes: !showPreviousRoutes})}}
-              >
-                <h4> </h4>
-                <h4>KORÁBBI UTAZÁSOK</h4>
-                <h4>{showPreviousRoutes? 'HIDE ME' : 'SHOW ME' }</h4>
-              </div>
+              <CenteredSection>
+                <div 
+                  style={s.submitButtonSmall} 
+                  onClick={this.carSubmit}
+                > 
+                  {this.state.editDatas? 'MENTÉS': 'ADATOK SZERKESZTÉSE'}
+                </div>
+              </CenteredSection>
+              <h3>KORÁBBI UTAZÁSOK</h3>              
               {showPreviousRoutes && this.getRoutesTable()}
-            </CenteredSection>
           </div>
         </div>
       );

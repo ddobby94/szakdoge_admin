@@ -76,12 +76,12 @@ export function* addNewCar(action) {
 }
 
 export function* addNewWorker(action) {
-    const { data } = action
+    const { data, compData } = action
     try {
         const response = yield call(realApi.setUserData, data);
         if (response.ok) {
-          yield put (newWorkerAdded(data));
-          yield put(postNewWorkerSuccess(response));
+          yield put (newWorkerAdded(data, compData));
+          // yield put(postNewWorkerSuccess(response));
         } else {
           throw response;
         }

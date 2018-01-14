@@ -20,10 +20,6 @@ import { generateXLSX } from '../../utils/excelHelper';
 const contentWidthPercentage = 60;
 const contentMarginLeft = window.innerWidth * contentWidthPercentage / 300;
 
-const basicDataContainer ={
-  width: contentWidthPercentage + '%',
-  marginLeft: contentMarginLeft + 'px',
-};
 
 const lineComponent = s.lineComponent;
 
@@ -62,9 +58,9 @@ class SelectedWorker extends React.PureComponent {
   getBasicDatas() {
     const { workerDetails } = this.state;
     return (
-      <div style={basicDataContainer}>
+      <div style={s.basicDatasWrapper}>
         <div style={lineComponent}>
-          <H2>NÉV:</H2>
+          <h4>NÉV:</h4>
           <input 
             type="text" style={this.getInputStyle()} 
             disabled={!this.state.editDatas}
@@ -73,7 +69,7 @@ class SelectedWorker extends React.PureComponent {
           />
         </div>
         <div style={lineComponent}>
-          <H2>TELEFONSZÁM:</H2>
+          <h4>TELEFONSZÁM:</h4>
           <input 
             type="text" style={this.getInputStyle()} 
             disabled={!this.state.editDatas}
@@ -81,9 +77,6 @@ class SelectedWorker extends React.PureComponent {
             onChange={(event) =>  this.setState({workerDetails: { ...workerDetails, phoneNumber: event.target.value }})}
           />
         </div>
-        <Button onClick={this.workerSubmit} >
-          {this.state.editDatas? 'MENTÉS': 'ADATOK SZERKESZTÉSE'}
-        </Button>
       </div>
     );
   }
@@ -151,8 +144,8 @@ class SelectedWorker extends React.PureComponent {
           <div>
              { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
             <div style={s.datePickerComponents}>
-              <h4>START</h4>
-              <h4>END</h4>
+              <h4>KEZDETI DÁTUM</h4>
+              <h4>VÉG DÁTUM</h4>
             </div>
             <div style={s.datePickerComponents}>
               <DatePicker
@@ -173,9 +166,10 @@ class SelectedWorker extends React.PureComponent {
       return (
         <div>
           { !startIsSmallerThanEnd && <h2>Az END dátum nagyobb mint a START dátum!!</h2>}
+          
           <div style={s.datePickerComponents}>
-            <h4>START DATE</h4>
-            <h4>END DATE</h4>
+            <h4>KEZDETI DÁTUM</h4>
+            <h4>VÉG DÁTUM</h4>
           </div>
           <div style={s.datePickerComponents}>
             <DatePicker
@@ -197,13 +191,16 @@ class SelectedWorker extends React.PureComponent {
             sortByDates={true}
           />
           {data && startIsSmallerThanEnd && (
-            <Button 
-              onClick={() => this.saveDataTable(data)}
-              style={{ margin: 20 }}
-            >
-              ADATOK KIEXPORTÁLÁSA EXCELBE
-            </Button>
+            <CenteredSection>
+              <div 
+                style={s.submitButton} 
+                onClick={() => this.saveDataTable(data)}
+              > 
+                ADATOK KIEXPORTÁLÁSA EXCELBE 
+              </div>
+            </CenteredSection>
           )}
+         
         </div>
       );
     } else {
@@ -225,16 +222,14 @@ class SelectedWorker extends React.PureComponent {
   getInputStyle() {
     if (this.state.editDatas) {
       return {
-        borderWidth: '2px',
-        height: '50px',
-        marginTop: '15px',
-        fontWeight: 'normal',
+        ...s.inputStyle,
+        width: 300,
       };
     }
     return {
       borderWidth: 0,
       height: '50px',
-      marginTop: '15px',
+      marginTop: '10px',
       fontWeight: 'bold',
     };
   }
@@ -252,27 +247,19 @@ class SelectedWorker extends React.PureComponent {
               { name: 'description', content: 'Útnyílvántartó admin felület' },
             ]}
           />
-          <div>
+          <div style={s.basicDatasContainer}>
+            <h3>ALKALMAZOTT ADATAI</h3>
+            {showBasicDatas && this.getBasicDatas()}
             <CenteredSection>
               <div 
-                style={s.clickAbleHeaderLine}
-                onClick={() => {this.setState({showBasicDatas: !showBasicDatas})}}
-              >
-                <h4> </h4>
-                <h4>ALKALMAZOTT ADATAI</h4>
-                <h4>{showBasicDatas? 'HIDE ME' : 'SHOW ME' }</h4>
+                style={s.submitButtonSmall} 
+                onClick={this.workerSubmit}
+              > 
+                {this.state.editDatas? 'MENTÉS': 'ADATOK SZERKESZTÉSE'}
               </div>
-              {showBasicDatas && this.getBasicDatas()}
-              <div 
-                style={s.clickAbleHeaderLine}
-                onClick={() => {this.setState({showPreviousRoutes: !showPreviousRoutes})}}
-              >
-                <h4> </h4>
-                <h4>KORÁBBI UTAZÁSOK</h4>
-                <h4>{showPreviousRoutes? 'HIDE ME' : 'SHOW ME' }</h4>
-              </div>
-              {showPreviousRoutes && this.getRoutesTable()}
             </CenteredSection>
+            <h3>KORÁBBI UTAZÁSOK</h3>
+            {showPreviousRoutes && this.getRoutesTable()}
           </div>
         </div>
       );

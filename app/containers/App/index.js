@@ -27,7 +27,6 @@ const cookies = new Cookies();
 const AppWrapper = styled.div`
   display: flex;
   min-height: 100%;
-  padding: 0 16px;
   flex-direction: column;
 `;
 
@@ -82,7 +81,7 @@ export function App(props) {
       />
       {(user && UID) && <Header user={user} router={router} />}
       {React.Children.toArray(props.children)}
-      {(user && UID) && <Footer />}
+      {/* {(user && UID) && <Footer />} */}
     </AppWrapper>
   );
 }

@@ -11,6 +11,17 @@
  */
 
 import { fromJS } from 'immutable';
+import { createSelector } from 'reselect';
+
+import { 
+  allCars,
+  allWorkers,
+  getOwnCompanyData,
+  makeSelectLoading,
+  getUser,
+  selectResponse,
+  getError,
+} from './selectors';
 
 import {
   GET_ALL_WORKERS_DATA,
@@ -136,13 +147,19 @@ function appReducer(state = initialState, action) {
           action.newCar,
         ]
       });
-    case NEW_WORKER_ADDED:
-      return Object.assign({}, state, {
-        cars: [
-          ...state.workers,
-          action.newWorker,
-        ]
-      });
+    case NEW_WORKER_ADDED: {
+      console.log('actions_ ', action)
+      // const newCompanyData = {
+      //   ...action.compData,
+      //   workers: [
+      //     ...action.compData.workers,
+      //     [action.compData.workers.length]: action.newWorker,
+      //   ]
+      // }
+      return state
+      .set('loading', false)
+      // .setIn('companyData', newCompanyData);
+    }
     case POST_NEW_CAR:
       return state
         .set('loading', true)

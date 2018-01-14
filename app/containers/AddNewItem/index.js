@@ -31,9 +31,11 @@ class NewItemPage extends React.PureComponent {
       progress: -1,
       loadedRoutes: props.location && [props.location.pathname],
       newCarPage: isItCarsPage,
-      role: 'user',
       company: '',
       alertShown: false,
+      password: 'Secret123',
+      phoneNumber: '06705558597',
+      email: '@mail.com'
     };
     this.carSubmit = this.carSubmit.bind(this);
     this.setLicencePlate = this.setLicencePlate.bind(this);
@@ -42,6 +44,12 @@ class NewItemPage extends React.PureComponent {
 
   handleChange(event) {
     this.setState({value: event.target.value});
+  }
+
+  componentWillReceiveProps(newProps) {
+    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+    console.log(newProps);
+    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
   }
 
   renderCarsFrom(){
@@ -206,6 +214,12 @@ alapján műszaki szakértő állapíthatja meg." */}
     if ( role !== 'owner') {
       this.setState({ company })
     }
+    if (!this.state.role) {
+      console.log('************************************************************')
+      console.log(roleBasedOptions[role][0])
+      this.setState({ role: roleBasedOptions[role][0] });
+    }
+    console.log('this.state:', this.state)
     return(
       <div style={s.divLineStyleColumn}>
         <form onSubmit={this.workerSubmit}>
@@ -216,21 +230,21 @@ alapján műszaki szakértő állapíthatja meg." */}
             />
             <H2>TELJES NÉV</H2>
             <input type="text" value={this.state.name} style={s.inputStyle}
-             onChange={(event) => this.setState({name: event.target.value})} />
+             onChange={(event) => this.setState({ name: event.target.value })} />
              <H2>CÉG</H2>
             {role === 'owner' ? <input type="text" value={this.state.company} style={s.inputStyle}
-             onChange={(event) => this.setState({company: event.target.value})} />
+             onChange={(event) => this.setState({ company: event.target.value })} />
              : <h3>{company}</h3>
             }
             <H2>TELEFONSZÁM</H2>
             <input type="text" value={this.state.phoneNumber} style={s.inputStyle}
-             onChange={(event) => this.setState({phoneNumber: event.target.value})} />
+             onChange={(event) => this.setState({ phoneNumber: event.target.value })} />
             <H2>EMAIL CÍM</H2>
             <input type="text" value={this.state.email} style={s.inputStyle}
-             onChange={(event) => this.setState({email: event.target.value})} />
+             onChange={(event) => this.setState({ email: event.target.value })} />
              <H2>JELSZÓ</H2>
             <input type="text" value={this.state.password} style={s.inputStyle}
-             onChange={(event) => this.setState({password: event.target.value})} />
+             onChange={(event) => this.setState({ password: event.target.value })} />
             <div style={s.submitButton} onClick={this.workerSubmit}> MENTÉS </div>
         </form>
       </div>
@@ -277,10 +291,11 @@ alapján műszaki szakértő állapíthatja meg." */}
       email,
     }
     const auth = firebase.auth();
-    const promise = auth.createUserWithEmailAndPassword(email, password)
+    auth.createUserWithEmailAndPassword(email, password)
     .then( e => {
       data.targetUid = e.uid;
-      this.props.postNewWorker(data)
+      console.log('props: ', this.props)
+      this.props.postNewWorker(data, this.props.companyData);
     })
     .catch( e => alert(e.message));
   }
@@ -370,7 +385,7 @@ const mapStateToProps = (state) => createStructuredSelector({
 export function mapDispatchToProps(dispatch) {
   return {
     postNewCar: (company, id, data) => dispatch(postNewCar(company, id, data)),
-    postNewWorker: (data) => dispatch(postNewWorker(data)),
+    postNewWorker: (data, compData) => dispatch(postNewWorker(data, compData)),
   };
 }
 
