@@ -2,6 +2,7 @@ import Metrics from './Metrics';
 import Colors from './Colors';
 
 const styles = {
+  // details page styles
   lineComponent: {
     display: 'flex',
     flexDirecton: 'row',
@@ -175,7 +176,6 @@ const styles = {
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  
   dropDownStyle: {
     position: 'absolute',
     height: 120,
